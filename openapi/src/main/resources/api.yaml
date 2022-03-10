@@ -70,9 +70,7 @@ components:
           type: string
         bytes_tx:
           type: integer
-          format: int64
         bytes_rx:
           type: integer
-          format: int64
         hour:
-          type: int32
+          type: integer
