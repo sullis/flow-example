@@ -26,6 +26,8 @@ paths:
         - name: hour
           in: query
           required: true
+          schema:
+            type: integer
       responses:
         '200':
           description: todo
