@@ -1,0 +1,76 @@
+openapi: 3.0.0
+servers:
+  - url: 'http://localhost:8080'
+info:
+  description: todo
+  title: todo
+  version: 0.0.1
+paths:
+  /flows:
+    post:
+      operationId: addFlow
+      responses:
+        '200':
+          description: todo
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FlowLog'
+        '405':
+          description: Invalid input
+      requestBody:
+        $ref: '#/components/requestBodies/FlowLog'
+    get:
+      operationId: getFlow
+      parameters:
+        - name: hour
+          in: query
+          required: true
+      responses:
+        '200':
+          description: todo
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FlowLog'
+        '400':
+          description: Invalid request
+components:
+  requestBodies:
+    FlowLog:
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/FlowLog'
+      description: todo
+      required: true
+  schemas:
+    FlowLog:
+      title: flow log
+      type: object
+      required:
+        - src_app
+        - dest_app
+        - vpc_id
+        - bytes_tx
+        - bytes_rx
+        - hour
+      properties:
+        src_app:
+          type: string
+        dest_app:
+          type: string
+        vpc_id:
+          type: string
+        bytes_tx:
+          type: integer
+          format: int64
+        bytes_rx:
+          type: integer
+          format: int64
+        hour:
+          type: int32
