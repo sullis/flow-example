@@ -14,5 +14,6 @@ public class App
                     final Environment environment) {
         final var aggregator = new FlowAggregator(configuration.getAggregatorConcurrencyLevel());
         environment.jersey().register(new FlowsResource(aggregator));
+        environment.healthChecks().register("DummyHealthCheck", new DummyHealthCheck());
     }
 }
