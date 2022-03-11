@@ -5,14 +5,11 @@ import org.openapitools.model.FlowLog;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.stream.Stream;
 
 public class FlowAggregator {
     private Map<Integer /* hour */, Map<String, FlowTotal>> flowDataMap;
     public AtomicLong flowLogCount = new AtomicLong(0);
-    private ForkJoinPool forkJoinPool;
 
     public FlowAggregator() {
         this.flowDataMap = new ConcurrentHashMap<>(32, 0.75f, 100);
