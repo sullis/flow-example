@@ -1,8 +1,8 @@
-package io.github.sullis.netflix.server;
+package io.github.sullis.flow.server;
 
 import org.junit.jupiter.api.Test;
 
-import static io.github.sullis.netflix.server.Hours.RANGE;
+import static io.github.sullis.flow.server.Hours.RANGE;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class HoursTest {

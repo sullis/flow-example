@@ -1,9 +1,9 @@
-package io.github.sullis.netflix.server;
+package io.github.sullis.flow.server;
 
 import org.junit.jupiter.api.Test;
 
-import static io.github.sullis.netflix.server.TestUtils.GET_RESPONSE_TYPE;
-import static io.github.sullis.netflix.server.TestUtils.makeFlowLog;
+import static io.github.sullis.flow.server.TestUtils.GET_RESPONSE_TYPE;
+import static io.github.sullis.flow.server.TestUtils.makeFlowLog;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.extension.ExtendWith;

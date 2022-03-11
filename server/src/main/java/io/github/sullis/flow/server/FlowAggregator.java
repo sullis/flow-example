@@ -1,4 +1,4 @@
-package io.github.sullis.netflix.server;
+package io.github.sullis.flow.server;
 
 import org.openapitools.model.FlowLog;
 import org.slf4j.Logger;
@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.LongAdder;
 
-import static io.github.sullis.netflix.server.Hours.isValidHour;
+import static io.github.sullis.flow.server.Hours.isValidHour;
 
 public class FlowAggregator {
     private static final float DEFAULT_LOAD_FACTOR = 0.75f;

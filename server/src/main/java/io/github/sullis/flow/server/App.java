@@ -1,4 +1,4 @@
-package io.github.sullis.netflix.server;
+package io.github.sullis.flow.server;
 
 import io.dropwizard.setup.Environment;
 

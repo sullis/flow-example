@@ -3,9 +3,9 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>io.github.sullis</groupId>
-  <artifactId>netflix-exercise-draft</artifactId>
+  <artifactId>flow-draft</artifactId>
   <packaging>pom</packaging>
-  <name>netflix-exercise-draft</name>
+  <name>flow-draft</name>
   <version>0.0.1-SNAPSHOT</version>
   <licenses>
     <license>

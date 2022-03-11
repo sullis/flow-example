@@ -1,4 +1,4 @@
-package io.github.sullis.netflix.server;
+package io.github.sullis.flow.server;
 
 import com.google.common.collect.Range;
 import java.util.stream.IntStream;

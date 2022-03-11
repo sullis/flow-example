@@ -1,4 +1,4 @@
-package io.github.sullis.netflix.server;
+package io.github.sullis.flow.server;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.validation.constraints.Min;

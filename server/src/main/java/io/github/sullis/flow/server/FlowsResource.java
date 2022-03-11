@@ -1,4 +1,4 @@
-package io.github.sullis.netflix.server;
+package io.github.sullis.flow.server;
 
 import org.openapitools.model.FlowLog;
 
@@ -16,7 +16,7 @@ import javax.ws.rs.core.MediaType;
 import java.util.List;
 import java.util.Map;
 
-import static io.github.sullis.netflix.server.Utils.buildFlowLog;
+import static io.github.sullis.flow.server.Utils.buildFlowLog;
 
 @Path("/flows")
 @Produces(MediaType.APPLICATION_JSON)

@@ -11,6 +11,6 @@ logging:
   # Logger-specific levels.
   loggers:
     org.eclipse.jetty.server: INFO
-    io.github.sullis.netflix: DEBUG
+    io.github.sullis.flow: DEBUG
 
 aggregatorConcurrencyLevel: 100
