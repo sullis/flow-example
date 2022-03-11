@@ -89,7 +89,7 @@ public class FlowAggregatorTest {
         final var futures = executor.invokeAll(callables);
         await().atMost(Duration.ofSeconds(5))
                 .pollDelay(Duration.ofMillis(100))
-                .until(() -> futures.stream().allMatch(f -> success(f)));
+                .until(() -> futures.stream().allMatch(f -> isSuccess(f)));
 
         assertThat(aggregator.getFlowLogCount()).isEqualTo(numWriters * logs.size());
 
@@ -138,7 +138,7 @@ public class FlowAggregatorTest {
 
     private static IntStream hours() { return Hours.stream(); }
 
-    private static boolean success(final Future<Boolean> future) {
+    private static boolean isSuccess(final Future<Boolean> future) {
         try {
             return future.isDone()
                     && !future.isCancelled()
