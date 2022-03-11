@@ -3,7 +3,7 @@ package io.github.sullis.netflix.server;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.validation.constraints.NotEmpty;
 
-public class Configuration extends io.dropwizard.Configuration {
+public class AppConfig extends io.dropwizard.Configuration {
     @NotEmpty
     private String defaultName;
 
