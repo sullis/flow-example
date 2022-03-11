@@ -8,6 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.LongAdder;
 
 public class FlowAggregator {
+    private static final float DEFAULT_LOAD_FACTOR = 0.75f;
     private final Map<Integer /* hour */, Map<LookupKey, FlowTotal>> flowDataMap;
     public final LongAdder flowLogCount = new LongAdder();
 
@@ -19,7 +20,7 @@ public class FlowAggregator {
      *
      */
     public FlowAggregator(final int concurrencyLevel) {
-        this.flowDataMap = new ConcurrentHashMap<>(32, 0.75f, concurrencyLevel);
+        this.flowDataMap = new ConcurrentHashMap<>(24 /* 24 hours in a day */, DEFAULT_LOAD_FACTOR, concurrencyLevel);
     }
 
     public void record(final List<FlowLog> logs) {
