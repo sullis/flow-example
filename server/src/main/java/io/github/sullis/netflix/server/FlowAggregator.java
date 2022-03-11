@@ -6,11 +6,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ForkJoinPool;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class FlowAggregator {
     private Map<Integer /* hour */, Map<String, FlowTotal>> flowDataMap;
-
+    public AtomicLong flowLogCount = new AtomicLong(0);
     private ForkJoinPool forkJoinPool;
 
     public FlowAggregator() {
@@ -24,9 +24,10 @@ public class FlowAggregator {
 
     public void record(final List<FlowLog> logs) {
         logs.parallelStream().forEach(log -> {
+            flowLogCount.incrementAndGet();
             Map<String, FlowTotal> data = findByHour(log.getHour());
             final var key = buildKey(log);
-            // TODO use AtomicInteger instead of Long ???
+            // TODO use AtomicLong instead of Long ???
             FlowTotal total = data.get(key);
             if (null == total) {
                 total = new FlowTotal();
@@ -38,8 +39,8 @@ public class FlowAggregator {
     }
 
     public class FlowTotal {
-        public final AtomicInteger bytesRx = new AtomicInteger(0);
-        public final AtomicInteger bytesTx = new AtomicInteger(0);
+        public final AtomicLong bytesRx = new AtomicLong(0);
+        public final AtomicLong bytesTx = new AtomicLong(0);
     }
 
     public Map<String, FlowTotal> findByHour(final Integer hour) {
@@ -49,6 +50,10 @@ public class FlowAggregator {
             flowDataMap.put(hour, result);
         }
         return result;
+    }
+
+    public long getFlowLogCount() {
+        return flowLogCount.longValue();
     }
 
     private static String buildKey(final FlowLog log) {
