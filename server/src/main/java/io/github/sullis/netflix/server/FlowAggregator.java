@@ -20,7 +20,7 @@ public class FlowAggregator {
      *
      */
     public FlowAggregator(final int concurrencyLevel) {
-        this.flowDataMap = new ConcurrentHashMap<>(24 /* 24 hours in a day */, DEFAULT_LOAD_FACTOR, concurrencyLevel);
+        this.flowDataMap = new ConcurrentHashMap<>(24 /* 24 hours */, DEFAULT_LOAD_FACTOR, concurrencyLevel);
     }
 
     public void record(final List<FlowLog> logs) {
