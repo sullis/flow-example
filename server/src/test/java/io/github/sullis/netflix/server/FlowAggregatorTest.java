@@ -50,9 +50,10 @@ public class FlowAggregatorTest {
     @ParameterizedTest
     @NullSource
     @ValueSource(ints = { -1, 25, 100 })
-    public void testInvalidHourIsIgnored(final Integer hour) {
-        final var log = makeFlowLog(hour, "vpc-0");
-        aggregator.record(List.of(log));
+    public void testInvalidHourIsIgnored(final Integer invalidHour) {
+        assertThat(Hours.isValidHour(invalidHour)).isFalse();
+        final var invalidLog = makeFlowLog(invalidHour, "vpc-0");
+        aggregator.record(List.of(invalidLog));
         assertThat(aggregator.getFlowLogCount()).isZero();
     }
 
