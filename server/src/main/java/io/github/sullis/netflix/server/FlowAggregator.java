@@ -10,7 +10,7 @@ import java.util.concurrent.atomic.LongAdder;
 public class FlowAggregator {
     private static final float DEFAULT_LOAD_FACTOR = 0.75f;
     private final Map<Integer /* hour */, Map<LookupKey, FlowTotal>> flowDataMap;
-    public final LongAdder flowLogCount = new LongAdder();
+    private final LongAdder flowLogCount = new LongAdder();
 
     /**
      *
