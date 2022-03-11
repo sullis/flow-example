@@ -69,6 +69,17 @@ public class AppTest {
     }
 
     @Test
+    public void serverRejectsInvalidHour() {
+        final var response = APP.client()
+                .target(flowsUrl())
+                .queryParam("hour", -1)
+                .request()
+                .accept(CONTENT_TYPE)
+                .get();
+        assertThat(response.getStatus()).isEqualTo(400);
+    }
+
+    @Test
     public void serverReturns400WhenPostBodyIsInvalid() {
         postEntity(Entity.json("{garbage"), 400);
     }

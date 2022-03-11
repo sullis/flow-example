@@ -3,6 +3,8 @@ package io.github.sullis.netflix.server;
 import org.openapitools.model.FlowLog;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -27,7 +29,7 @@ public class FlowsResource {
     }
 
     @GET
-    public List<FlowLog> get(@QueryParam("hour") int hour) {
+    public List<FlowLog> get(@QueryParam("hour") @Min(0) @Max(23) int hour) {
         Map<LookupKey, FlowTotal> data = aggregator.findByHour(hour);
         return data.entrySet().stream()
                 .map((entry) -> buildFlowLog(entry.getKey(), entry.getValue()))
