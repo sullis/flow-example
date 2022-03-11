@@ -70,7 +70,7 @@ public class AppTest {
     }
 
     private Response postFlows(final List<FlowLog> payload) {
-        return postEntity(Entity.json(payload), 200);
+        return postEntity(Entity.json(payload), 204);
     }
 
     private Response getFlows(final int hour) {

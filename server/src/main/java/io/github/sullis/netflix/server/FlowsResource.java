@@ -11,8 +11,10 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.core.MediaType;
 
-import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+
+import static io.github.sullis.netflix.server.Utils.buildFlowLog;
 
 @Path("/flows")
 @Produces(MediaType.APPLICATION_JSON)
@@ -26,13 +28,14 @@ public class FlowsResource {
 
     @GET
     public List<FlowLog> get(@QueryParam("hour") int hour) {
-        // TODO return aggregator.findByHour(hour);
-        return Collections.emptyList();
+        Map<LookupKey, FlowTotal> data = aggregator.findByHour(hour);
+        return data.entrySet().stream()
+                .map((entry) -> buildFlowLog(entry.getKey(), entry.getValue()))
+                .toList();
     }
 
     @POST
-    public List<FlowLog> post(@Valid List<FlowLog> flowLogs) {
+    public void post(@Valid List<FlowLog> flowLogs) {
         aggregator.record(flowLogs);
-        return Collections.emptyList();
     }
 }

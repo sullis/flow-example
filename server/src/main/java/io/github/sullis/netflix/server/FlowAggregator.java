@@ -26,11 +26,6 @@ public class FlowAggregator {
         });
     }
 
-    static class FlowTotal {
-        public final LongAdder bytesRx = new LongAdder();
-        public final LongAdder bytesTx = new LongAdder();
-    }
-
     public Map<LookupKey, FlowTotal> findByHour(final Integer hour) {
         return flowDataMap.computeIfAbsent(hour, (h) -> new ConcurrentHashMap<>());
     }
