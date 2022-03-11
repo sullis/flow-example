@@ -17,14 +17,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.IntStream;
 
+import static io.github.sullis.flow.server.TestUtils.waitForSuccess;
 import static io.github.sullis.flow.server.TestUtils.makeFlowLog;
 import static io.github.sullis.flow.server.TestUtils.makeFlowLogs;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.awaitility.Awaitility.await;
 
 public class FlowAggregatorTest {
     private static final SecureRandom RANDOM = new SecureRandom();
@@ -91,9 +90,7 @@ public class FlowAggregatorTest {
         Collections.shuffle(callables, RANDOM);
 
         final var futures = executor.invokeAll(callables);
-        await().atMost(Duration.ofSeconds(5))
-                .pollDelay(Duration.ofMillis(100))
-                .until(() -> futures.stream().allMatch(f -> isSuccess(f)));
+        waitForSuccess(futures, Duration.ofSeconds(5));
 
         assertThat(aggregator.getFlowLogCount()).isEqualTo(numWriters * logs.size());
 
@@ -142,15 +139,5 @@ public class FlowAggregatorTest {
     }
 
     private static IntStream hours() { return Hours.stream(); }
-
-    private static boolean isSuccess(final Future<Boolean> future) {
-        try {
-            return future.isDone()
-                    && !future.isCancelled()
-                    && future.get().booleanValue();
-        } catch (Exception ex) {
-            throw new RuntimeException(ex);
-        }
-    }
 
 }
