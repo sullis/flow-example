@@ -22,7 +22,7 @@ import static org.awaitility.Awaitility.await;
 
 public class FlowAggregatorTest {
     private static final SecureRandom RANDOM = new SecureRandom();
-    private static final List<String> VPC_LIST = List.of("vpc1", "vpc2");
+    private static final List<String> VPC_LIST = List.of("vpc-0", "vpc-1");
     private static final List<Integer> HOURS_LIST = Hours.stream().boxed().toList();
 
     private FlowAggregator aggregator;
