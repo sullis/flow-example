@@ -4,17 +4,20 @@ import org.openapitools.model.FlowLog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.LongAdder;
 
+import static io.github.sullis.flow.server.Hours.HOURS_PER_DAY;
 import static io.github.sullis.flow.server.Hours.isValidHour;
 
 public class FlowAggregator {
     private static final float DEFAULT_LOAD_FACTOR = 0.75f;
     private static final Logger LOGGER = LoggerFactory.getLogger(FlowAggregator.class);
-    private final Map<Integer /* hour */, Map<LookupKey, FlowTotal>> flowDataMap;
+    private final ConcurrentHashMap<LookupKey, FlowTotal>[] flowDataArray;
     private final LongAdder flowLogCount = new LongAdder();
 
     /**
@@ -25,7 +28,10 @@ public class FlowAggregator {
      *
      */
     public FlowAggregator(final int concurrencyLevel) {
-        this.flowDataMap = new ConcurrentHashMap<>(24 /* 24 hours */, DEFAULT_LOAD_FACTOR, concurrencyLevel);
+        this.flowDataArray = new ConcurrentHashMap[HOURS_PER_DAY];
+        Hours.stream().forEach(hour -> {
+            flowDataArray[hour] = new ConcurrentHashMap<LookupKey, FlowTotal>(100, DEFAULT_LOAD_FACTOR, concurrencyLevel);
+        });
     }
 
     public void record(final List<FlowLog> logs) {
@@ -49,7 +55,12 @@ public class FlowAggregator {
     }
 
     public Map<LookupKey, FlowTotal> findByHour(final Integer hour) {
-        return flowDataMap.computeIfAbsent(hour, (h) -> new ConcurrentHashMap<>());
+        if (isValidHour(hour)) {
+            return this.flowDataArray[hour];
+        } else {
+            LOGGER.warn("Invalid hour: " + hour);
+            return Collections.emptyMap();
+        }
     }
 
     public long getFlowLogCount() {
