@@ -49,7 +49,7 @@ public class FlowAggregatorTest {
 
     @ParameterizedTest
     @NullSource
-    @ValueSource(ints = { -1, 25, 100})
+    @ValueSource(ints = { -1, 25, 100 })
     public void testInvalidHourIsIgnored(final Integer hour) {
         final var log = makeFlowLog(hour, "vpc-0");
         aggregator.record(List.of(log));
