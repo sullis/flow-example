@@ -18,7 +18,7 @@ public class FlowAggregator {
     public void record(final List<FlowLog> logs) {
         logs.parallelStream().forEach(log -> {
             Map<String, FlowTotal> data = findByHour(log.getHour());
-            final var key = buildKey(log);
+            final var key = buildLookupKey(log);
             FlowTotal total = data.computeIfAbsent(key, (k) -> new FlowTotal());
             total.bytesRx.add(log.getBytesRx());
             total.bytesTx.add(log.getBytesTx());
@@ -39,7 +39,7 @@ public class FlowAggregator {
         return flowLogCount.sum();
     }
 
-    private static String buildKey(final FlowLog log) {
+    private static String buildLookupKey(final FlowLog log) {
         final var sb = new StringBuilder();
         sb.append(log.getSrcApp());
         sb.append("-");

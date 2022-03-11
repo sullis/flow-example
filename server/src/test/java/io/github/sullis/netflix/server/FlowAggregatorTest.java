@@ -8,6 +8,7 @@ import org.openapitools.model.FlowLog;
 
 import java.security.SecureRandom;
 import java.time.Duration;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -44,8 +45,10 @@ public class FlowAggregatorTest {
             @Values(ints = { 1, 2, 3, 10 }) final int numReaders,
             @Values(ints = { 1, 2, 3, 10 }) final int numWriters) throws Exception {
         final List<Integer> hours = HOURS_LIST;
+        final int numVpcs = VPC_LIST.size();
         final var logs = hours.stream()
-                .map(h -> makeLog(h))
+                .map(h -> makeLogs(h, VPC_LIST))
+                .flatMap(Collection::stream)
                 .toList();
         final var executor = Executors.newFixedThreadPool(numThreads);
         final var callables = new LinkedList<Callable<Boolean>>();
@@ -75,7 +78,7 @@ public class FlowAggregatorTest {
 
         hours.stream().forEach(hour -> {
             final var result = aggregator.findByHour(logs.get(0).getHour());
-            assertThat(result).hasSize(1);
+            assertThat(result).hasSize(numVpcs);
             final var flowTotal = result.values().iterator().next();
             assertThat(flowTotal.bytesRx.longValue()).isGreaterThan(0);
             assertThat(flowTotal.bytesTx.longValue()).isGreaterThan(0);
@@ -112,12 +115,16 @@ public class FlowAggregatorTest {
 
     private static IntStream hours() { return Hours.stream(); }
 
-    private static final FlowLog makeLog(int hour) {
+    private static final List<FlowLog> makeLogs(final int hour, final List<String> vpcs) {
+        return vpcs.stream().map(vpc -> makeLog(hour, vpc)).toList();
+    }
+
+    private static final FlowLog makeLog(int hour, final String vpcId) {
         final var log = new FlowLog();
         log.setHour(hour);
         log.setBytesRx(12301);
         log.setBytesTx(23401);
-        log.setVpcId(VPC_LIST.get(0));
+        log.setVpcId(vpcId);
         log.setDestApp("destApp1");
         log.setSrcApp("srcApp1");
         return log;
