@@ -51,10 +51,13 @@ public class FlowAggregatorTest {
     @NullSource
     @ValueSource(ints = { -1, 25, 100 })
     public void testInvalidHourIsIgnored(final Integer invalidHour) {
+        final var vpcId = "vpc-0";
         assertThat(Hours.isValidHour(invalidHour)).isFalse();
-        final var invalidLog = makeFlowLog(invalidHour, "vpc-0");
-        aggregator.record(List.of(invalidLog));
-        assertThat(aggregator.getFlowLogCount()).isZero();
+        final var validLog = makeFlowLog(3, vpcId);
+        final var invalidLog = makeFlowLog(invalidHour, vpcId);
+        aggregator.record(List.of(validLog, invalidLog, validLog));
+        assertThat(aggregator.getFlowLogCount()).isEqualTo(2);
+        assertThat(aggregator.getInvalidFlowLogCount()).isEqualTo(1);
     }
 
     @CartesianTest
@@ -101,6 +104,7 @@ public class FlowAggregatorTest {
             assertThat(flowTotal.bytesRx.longValue()).isGreaterThan(0);
             assertThat(flowTotal.bytesTx.longValue()).isGreaterThan(0);
         });
+        assertThat(aggregator.getInvalidFlowLogCount()).isZero();
         executor.shutdown();
     }
 

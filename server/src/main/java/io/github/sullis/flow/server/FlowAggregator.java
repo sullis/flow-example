@@ -5,7 +5,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -19,6 +18,7 @@ public class FlowAggregator {
     private static final Logger LOGGER = LoggerFactory.getLogger(FlowAggregator.class);
     private final ConcurrentHashMap<LookupKey, FlowTotal>[] flowDataArray;
     private final LongAdder flowLogCount = new LongAdder();
+    private final LongAdder invalidFlowLogCount = new LongAdder();
 
     /**
      *
@@ -49,6 +49,7 @@ public class FlowAggregator {
                 flowLogCount.increment();
             } else {
                 LOGGER.warn("FlowLog contains invalid hour: {}", hour);
+                invalidFlowLogCount.increment();
                 // TODO : report a metric to DataDog or equivalent
             }
         });
@@ -65,6 +66,10 @@ public class FlowAggregator {
 
     public long getFlowLogCount() {
         return flowLogCount.sum();
+    }
+
+    public long getInvalidFlowLogCount() {
+        return invalidFlowLogCount.sum();
     }
 
     private static LookupKey buildLookupKey(final FlowLog log) {
