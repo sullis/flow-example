@@ -2,6 +2,8 @@ package io.github.sullis.netflix.server;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junitpioneer.jupiter.cartesian.CartesianTest;
+import org.junitpioneer.jupiter.cartesian.CartesianTest.Values;
 import org.openapitools.model.FlowLog;
 
 import java.security.SecureRandom;
@@ -10,8 +12,6 @@ import java.util.*;
 import java.util.concurrent.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
@@ -34,25 +34,24 @@ public class FlowAggregatorTest {
         });
     }
 
-
-    @ParameterizedTest
-    @ValueSource(ints = { 2, 5, 10 })
-    public void concurrency(final int nThreads) throws Exception {
+    @CartesianTest
+    public void concurrency(
+            @Values(ints = { 1, 2, 3, 10 }) final int numThreads,
+            @Values(ints = { 1, 2, 3, 10 }) final int numReaders,
+            @Values(ints = { 1, 2, 3, 10 }) final int numWriters)  {
         final List<Integer> hours = List.of(5, 10, 3, 12, 1);
         final var logs = hours.stream().map(h -> makeLog(h)).collect(Collectors.toList());
-        final var executor = Executors.newFixedThreadPool(nThreads);
+        final var executor = Executors.newFixedThreadPool(numThreads);
         final var completionService = new ExecutorCompletionService<Boolean>(executor);
-        final var nReaders = 2 * nThreads;
-        final var nWriters = 2 * nThreads;
         final var callables = new LinkedList<Callable<Boolean>>();
-        for (int n = 0; n < nReaders; n++) {
+        for (int n = 0; n < numReaders; n++) {
             Callable<Boolean> reader = () -> {
                 final var result = aggregator.findByHour(logs.get(0).getHour());
                 return (result != null);
             };
             callables.add(reader);
         }
-        for (int n = 0; n < nWriters; n++) {
+        for (int n = 0; n < numWriters; n++) {
             Callable<Boolean> writer = () -> {
                 aggregator.record(logs);
                 return true;
@@ -67,7 +66,7 @@ public class FlowAggregatorTest {
                 .pollDelay(Duration.ofMillis(100))
                 .until(() -> futures.stream().allMatch(f -> f.isDone()));
 
-        assertThat(aggregator.getFlowLogCount()).isEqualTo(nWriters * logs.size());
+        assertThat(aggregator.getFlowLogCount()).isEqualTo(numWriters * logs.size());
 
         hours.stream().forEach(hour -> {
             final var result = aggregator.findByHour(logs.get(0).getHour());
