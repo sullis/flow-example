@@ -8,11 +8,11 @@ import java.util.List;
 public class TestUtils {
     public static final GenericType<List<FlowLog>> GET_RESPONSE_TYPE = new GenericType<List<FlowLog>>() {};
 
-    public static final List<FlowLog> makeLogs(final int hour, final List<String> vpcs) {
-        return vpcs.stream().map(vpc -> makeLog(hour, vpc)).toList();
+    public static final List<FlowLog> makeFlowLogs(final int hour, final List<String> vpcs) {
+        return vpcs.stream().map(vpc -> makeFlowLog(hour, vpc)).toList();
     }
 
-    public static final FlowLog makeLog(int hour, final String vpcId) {
+    public static final FlowLog makeFlowLog(int hour, final String vpcId) {
         final var log = new FlowLog();
         log.setHour(hour);
         log.setBytesRx(1000);

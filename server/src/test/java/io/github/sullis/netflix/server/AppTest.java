@@ -3,7 +3,7 @@ package io.github.sullis.netflix.server;
 import org.junit.jupiter.api.Test;
 
 import static io.github.sullis.netflix.server.TestUtils.GET_RESPONSE_TYPE;
-import static io.github.sullis.netflix.server.TestUtils.makeLog;
+import static io.github.sullis.netflix.server.TestUtils.makeFlowLog;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -42,8 +42,8 @@ public class AppTest {
         final var vpc0 = "vpc-0";
         final var vpc1 = "vpc-1";
 
-        postFlows(List.of(makeLog(hour, vpc0), makeLog(hour, vpc1)));
-        postFlows(List.of(makeLog(hour, vpc0)));
+        postFlows(List.of(makeFlowLog(hour, vpc0), makeFlowLog(hour, vpc1)));
+        postFlows(List.of(makeFlowLog(hour, vpc0)));
 
         final var response = getFlows(hour);
         assertThat(response).hasSize(2);
