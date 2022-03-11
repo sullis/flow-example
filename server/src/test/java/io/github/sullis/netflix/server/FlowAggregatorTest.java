@@ -10,6 +10,8 @@ import java.util.*;
 import java.util.concurrent.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
@@ -32,11 +34,12 @@ public class FlowAggregatorTest {
         });
     }
 
-    @Test
-    public void multipleWritersAndMultipleReaders() throws Exception {
-        final List<Integer> hours = List.of(5, 10, 3, 12);
+
+    @ParameterizedTest
+    @ValueSource(ints = { 2, 5, 10 })
+    public void concurrency(final int nThreads) throws Exception {
+        final List<Integer> hours = List.of(5, 10, 3, 12, 1);
         final var logs = hours.stream().map(h -> makeLog(h)).collect(Collectors.toList());
-        final var nThreads = 5;
         final var executor = Executors.newFixedThreadPool(nThreads);
         final var completionService = new ExecutorCompletionService<Boolean>(executor);
         final var nReaders = 2 * nThreads;
@@ -64,13 +67,15 @@ public class FlowAggregatorTest {
                 .pollDelay(Duration.ofMillis(100))
                 .until(() -> futures.stream().allMatch(f -> f.isDone()));
 
-        assertThat(aggregator.getFlowLogCount()).isEqualTo(40L);
+        assertThat(aggregator.getFlowLogCount()).isEqualTo(nWriters * logs.size());
 
-        final var result = aggregator.findByHour(logs.get(0).getHour());
-        assertThat(result).hasSize(1);
-        final var flowTotal = result.values().iterator().next();
-        assertThat(flowTotal.bytesRx.longValue()).isEqualTo(123010L);
-        assertThat(flowTotal.bytesTx.longValue()).isEqualTo(234010L);
+        hours.stream().forEach(hour -> {
+            final var result = aggregator.findByHour(logs.get(0).getHour());
+            assertThat(result).hasSize(1);
+            final var flowTotal = result.values().iterator().next();
+            assertThat(flowTotal.bytesRx.longValue()).isGreaterThan(0);
+            assertThat(flowTotal.bytesTx.longValue()).isGreaterThan(0);
+        });
         executor.shutdown();
     }
 
