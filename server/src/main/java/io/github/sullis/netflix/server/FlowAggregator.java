@@ -24,10 +24,14 @@ public class FlowAggregator {
     }
 
     public void record(final List<FlowLog> logs) {
+        // Note:  using Java's parallelStream to improve
+        //        performance. If I had more time, I would add
+        //        load tests that confirm this.
         logs.parallelStream().forEach(log -> {
+            // TODO : verify that 'getHour' returns a valid hour
             Map<LookupKey, FlowTotal> data = findByHour(log.getHour());
             final var key = buildLookupKey(log);
-            FlowTotal total = data.computeIfAbsent(key, (k) -> new FlowTotal());
+            final FlowTotal total = data.computeIfAbsent(key, (k) -> new FlowTotal());
             total.bytesRx.add(log.getBytesRx());
             total.bytesTx.add(log.getBytesTx());
             flowLogCount.increment();
