@@ -2,6 +2,9 @@ package io.github.sullis.netflix.server;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.junitpioneer.jupiter.cartesian.CartesianTest;
 import org.junitpioneer.jupiter.cartesian.CartesianTest.Values;
 import org.openapitools.model.FlowLog;
@@ -44,17 +47,14 @@ public class FlowAggregatorTest {
         });
     }
 
-    @Test
-    public void testInvalidHourIsIgnored() {
-        Integer[] invalidHours = { -1, 25, null };
-        for (Integer invalidHour : invalidHours) {
-            final var log = makeFlowLog(3, "vpc-0");
-            log.setHour(invalidHour);
-            aggregator.record(List.of(log));
-            assertThat(aggregator.getFlowLogCount()).isZero();
-        }
+    @ParameterizedTest
+    @NullSource
+    @ValueSource(ints = { -1, 25, 100})
+    public void testInvalidHourIsIgnored(final Integer hour) {
+        final var log = makeFlowLog(hour, "vpc-0");
+        aggregator.record(List.of(log));
+        assertThat(aggregator.getFlowLogCount()).isZero();
     }
-
 
     @CartesianTest
     public void concurrency(

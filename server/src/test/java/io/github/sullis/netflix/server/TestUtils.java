@@ -12,7 +12,7 @@ public class TestUtils {
         return vpcs.stream().map(vpc -> makeFlowLog(hour, vpc)).toList();
     }
 
-    public static final FlowLog makeFlowLog(int hour, final String vpcId) {
+    public static final FlowLog makeFlowLog(final Integer hour, final String vpcId) {
         final var log = new FlowLog();
         log.setHour(hour);
         log.setBytesRx(1000);
