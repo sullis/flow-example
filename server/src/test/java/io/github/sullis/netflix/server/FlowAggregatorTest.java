@@ -18,6 +18,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.IntStream;
 
+import static io.github.sullis.netflix.server.TestUtils.makeLogs;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 
@@ -123,21 +124,6 @@ public class FlowAggregatorTest {
     }
 
     private static IntStream hours() { return Hours.stream(); }
-
-    private static final List<FlowLog> makeLogs(final int hour, final List<String> vpcs) {
-        return vpcs.stream().map(vpc -> makeLog(hour, vpc)).toList();
-    }
-
-    private static final FlowLog makeLog(int hour, final String vpcId) {
-        final var log = new FlowLog();
-        log.setHour(hour);
-        log.setBytesRx(1000);
-        log.setBytesTx(701);
-        log.setVpcId(vpcId);
-        log.setDestApp("destApp1");
-        log.setSrcApp("srcApp1");
-        return log;
-    }
 
     private static boolean success(final Future<Boolean> future) {
         try {
