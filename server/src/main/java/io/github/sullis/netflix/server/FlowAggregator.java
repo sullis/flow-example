@@ -8,9 +8,16 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.LongAdder;
 
 public class FlowAggregator {
-    private Map<Integer /* hour */, Map<LookupKey, FlowTotal>> flowDataMap;
-    public LongAdder flowLogCount = new LongAdder();
+    private final Map<Integer /* hour */, Map<LookupKey, FlowTotal>> flowDataMap;
+    public final LongAdder flowLogCount = new LongAdder();
 
+    /**
+     *
+     * @param concurrencyLevel the estimated number of concurrently
+     * updating threads. The implementation may use this value as
+     * a sizing hint.
+     *
+     */
     public FlowAggregator(final int concurrencyLevel) {
         this.flowDataMap = new ConcurrentHashMap<>(32, 0.75f, concurrencyLevel);
     }

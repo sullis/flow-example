@@ -6,10 +6,11 @@ server:
 logging:
 
   # The default level of all loggers. Can be OFF, ERROR, WARN, INFO, DEBUG, TRACE, or ALL.
-  level: INFO
+  level: WARN
 
   # Logger-specific levels.
   loggers:
+    org.eclipse.jetty.server: INFO
     io.github.sullis.netflix: DEBUG
 
 aggregatorConcurrencyLevel: 100
