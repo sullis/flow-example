@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -23,6 +24,8 @@ import static org.awaitility.Awaitility.await;
 public class FlowAggregatorTest {
     private static final SecureRandom RANDOM = new SecureRandom();
     private static final List<String> VPC_LIST = List.of("vpc-0", "vpc-1");
+    private static final List<String> DEST_LIST = List.of("dest-0", "dest-1");
+    private static final List<String> SRC_LIST = List.of("src-0", "src-1", "src-2");
     private static final List<Integer> HOURS_LIST = Hours.stream().boxed().toList();
 
     private FlowAggregator aggregator;
@@ -88,27 +91,33 @@ public class FlowAggregatorTest {
 
     @Test
     public void invokeRecordMethodMultipleTimes() {
+        final AtomicLong logCount = new AtomicLong(0);
         hours().forEach(hour -> {
             VPC_LIST.forEach(vpc -> {
-                final var log = new FlowLog();
-                log.setHour(hour);
-                log.setBytesRx(1000);
-                log.setBytesTx(700);
-                log.setVpcId(vpc);
-                log.setDestApp("destApp1");
-                log.setSrcApp("srcApp1");
-                aggregator.record(List.of(log, log));
+                DEST_LIST.forEach(dest -> {
+                    SRC_LIST.forEach(src -> {
+                        final var log = new FlowLog();
+                        log.setHour(hour);
+                        log.setBytesRx(1000);
+                        log.setBytesTx(701);
+                        log.setVpcId(vpc);
+                        log.setDestApp(dest);
+                        log.setSrcApp(src);
+                        aggregator.record(List.of(log, log));
+                        logCount.addAndGet(2);
+                    });
+                });
             });
         });
 
-        assertThat(aggregator.getFlowLogCount()).isEqualTo(96L);
+        assertThat(aggregator.getFlowLogCount()).isEqualTo(logCount.get());
 
         hours().forEach(hour -> {
             final var result = aggregator.findByHour(hour);
-            assertThat(result.values()).hasSize(VPC_LIST.size());
+            assertThat(result.values()).hasSize(VPC_LIST.size() * SRC_LIST.size() * DEST_LIST.size());
             final var flowTotal = result.values().iterator().next();
             assertThat(flowTotal.bytesRx.longValue()).isEqualTo(2000L);
-            assertThat(flowTotal.bytesTx.longValue()).isEqualTo(1400L);
+            assertThat(flowTotal.bytesTx.longValue()).isEqualTo(1402L);
         });
 
     }
@@ -122,8 +131,8 @@ public class FlowAggregatorTest {
     private static final FlowLog makeLog(int hour, final String vpcId) {
         final var log = new FlowLog();
         log.setHour(hour);
-        log.setBytesRx(12301);
-        log.setBytesTx(23401);
+        log.setBytesRx(1000);
+        log.setBytesTx(701);
         log.setVpcId(vpcId);
         log.setDestApp("destApp1");
         log.setSrcApp("srcApp1");

@@ -8,7 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.LongAdder;
 
 public class FlowAggregator {
-    private Map<Integer /* hour */, Map<String, FlowTotal>> flowDataMap;
+    private Map<Integer /* hour */, Map<LookupKey, FlowTotal>> flowDataMap;
     public LongAdder flowLogCount = new LongAdder();
 
     public FlowAggregator() {
@@ -17,7 +17,7 @@ public class FlowAggregator {
 
     public void record(final List<FlowLog> logs) {
         logs.parallelStream().forEach(log -> {
-            Map<String, FlowTotal> data = findByHour(log.getHour());
+            Map<LookupKey, FlowTotal> data = findByHour(log.getHour());
             final var key = buildLookupKey(log);
             FlowTotal total = data.computeIfAbsent(key, (k) -> new FlowTotal());
             total.bytesRx.add(log.getBytesRx());
@@ -31,7 +31,7 @@ public class FlowAggregator {
         public final LongAdder bytesTx = new LongAdder();
     }
 
-    public Map<String, FlowTotal> findByHour(final Integer hour) {
+    public Map<LookupKey, FlowTotal> findByHour(final Integer hour) {
         return flowDataMap.computeIfAbsent(hour, (h) -> new ConcurrentHashMap<>());
     }
 
@@ -39,15 +39,10 @@ public class FlowAggregator {
         return flowLogCount.sum();
     }
 
-    private static String buildLookupKey(final FlowLog log) {
-        final var sb = new StringBuilder();
-        sb.append(log.getSrcApp());
-        sb.append("-");
-        sb.append(log.getDestApp());
-        sb.append("-");
-        sb.append(log.getVpcId());
-        sb.append("-");
-        sb.append(log.getHour());
-        return sb.toString();
+    private static LookupKey buildLookupKey(final FlowLog log) {
+        return new LookupKey(log.getSrcApp(),
+                            log.getDestApp(),
+                            log.getVpcId(),
+                            log.getHour());
     }
 }
