@@ -4,12 +4,18 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openapitools.model.FlowLog;
 
-import java.util.List;
+import java.security.SecureRandom;
+import java.time.Duration;
+import java.util.*;
+import java.util.concurrent.*;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.awaitility.Awaitility.await;
 
 public class FlowAggregatorTest {
+    private static final SecureRandom RANDOM = new SecureRandom();
     private static final List<String> VPC_LIST = List.of("vpc1", "vpc2");
 
     private FlowAggregator aggregator;
@@ -24,6 +30,48 @@ public class FlowAggregatorTest {
         Hours.stream().forEach(hour -> {
             assertThat(aggregator.findByHour(hour)).isEmpty();
         });
+    }
+
+    @Test
+    public void multipleWritersAndMultipleReaders() throws Exception {
+        final List<Integer> hours = List.of(5, 10, 3, 12);
+        final var logs = hours.stream().map(h -> makeLog(h)).collect(Collectors.toList());
+        final var nThreads = 5;
+        final var executor = Executors.newFixedThreadPool(nThreads);
+        final var completionService = new ExecutorCompletionService<Boolean>(executor);
+        final var nReaders = 2 * nThreads;
+        final var nWriters = 2 * nThreads;
+        final var callables = new LinkedList<Callable<Boolean>>();
+        for (int n = 0; n < nReaders; n++) {
+            Callable<Boolean> reader = () -> {
+                final var result = aggregator.findByHour(logs.get(0).getHour());
+                return (result != null);
+            };
+            callables.add(reader);
+        }
+        for (int n = 0; n < nWriters; n++) {
+            Callable<Boolean> writer = () -> {
+                aggregator.record(logs);
+                return true;
+            };
+            callables.add(writer);
+        }
+        Collections.shuffle(callables, RANDOM);
+        final var futures = callables.stream()
+                .map(completionService::submit)
+                .collect(Collectors.toList());
+        await().atMost(Duration.ofSeconds(5))
+                .pollDelay(Duration.ofMillis(100))
+                .until(() -> futures.stream().allMatch(f -> f.isDone()));
+
+        assertThat(aggregator.getFlowLogCount()).isEqualTo(40L);
+
+        final var result = aggregator.findByHour(logs.get(0).getHour());
+        assertThat(result).hasSize(1);
+        final var flowTotal = result.values().iterator().next();
+        assertThat(flowTotal.bytesRx.longValue()).isEqualTo(123010L);
+        assertThat(flowTotal.bytesTx.longValue()).isEqualTo(234010L);
+        executor.shutdown();
     }
 
     @Test
@@ -58,8 +106,8 @@ public class FlowAggregatorTest {
     private static final FlowLog makeLog(int hour) {
         final var log = new FlowLog();
         log.setHour(hour);
-        log.setBytesRx(1230);
-        log.setBytesTx(2340);
+        log.setBytesRx(12301);
+        log.setBytesTx(23401);
         log.setVpcId(VPC_LIST.get(0));
         log.setDestApp("destApp1");
         log.setSrcApp("srcApp1");

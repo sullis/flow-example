@@ -26,7 +26,7 @@ public class FlowAggregator {
         });
     }
 
-    public class FlowTotal {
+    static class FlowTotal {
         public final LongAdder bytesRx = new LongAdder();
         public final LongAdder bytesTx = new LongAdder();
     }
