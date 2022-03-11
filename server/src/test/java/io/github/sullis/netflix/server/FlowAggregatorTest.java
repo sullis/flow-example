@@ -1,6 +1,5 @@
 package io.github.sullis.netflix.server;
 
-import com.google.common.collect.Range;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openapitools.model.FlowLog;
@@ -11,14 +10,9 @@ import java.util.stream.IntStream;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class FlowAggregatorTest {
-    private static final Range<Integer> HOURS_RANGE = Range.closed(0, 23);
     private static final List<String> VPC_LIST = List.of("vpc1", "vpc2");
 
     private FlowAggregator aggregator;
-
-    private static IntStream hours() {
-        return IntStream.rangeClosed(HOURS_RANGE.lowerEndpoint(), HOURS_RANGE.upperEndpoint());
-    }
 
     @BeforeEach
     public void beforeEach() {
@@ -27,7 +21,7 @@ public class FlowAggregatorTest {
 
     @Test
     public void testNoData() {
-        hours().forEach(hour -> {
+        Hours.stream().forEach(hour -> {
             assertThat(aggregator.findByHour(hour)).isEmpty();
         });
     }
@@ -58,6 +52,8 @@ public class FlowAggregatorTest {
         });
 
     }
+
+    private static IntStream hours() { return Hours.stream(); }
 
     private static final FlowLog makeLog(int hour) {
         final var log = new FlowLog();
