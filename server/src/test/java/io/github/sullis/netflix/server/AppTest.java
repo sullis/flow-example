@@ -2,6 +2,7 @@ package io.github.sullis.netflix.server;
 
 import org.junit.jupiter.api.Test;
 
+import static io.github.sullis.netflix.server.TestUtils.GET_RESPONSE_TYPE;
 import static io.github.sullis.netflix.server.TestUtils.makeLog;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -37,11 +38,34 @@ public class AppTest {
 
     @Test
     public void happyPath() {
-        final var vpc = "vpc-0";
-        postFlows(List.of(makeLog(3, vpc), makeLog(12, vpc)));
-        postFlows(List.of(makeLog(3, vpc)));
-        final var response = getFlows(3);
-        assertThat(response.getStatus()).isEqualTo(200);
+        final int hour = 3;
+        final var vpc0 = "vpc-0";
+        final var vpc1 = "vpc-1";
+
+        postFlows(List.of(makeLog(hour, vpc0), makeLog(hour, vpc1)));
+        postFlows(List.of(makeLog(hour, vpc0)));
+
+        final var response = getFlows(hour);
+        assertThat(response).hasSize(2);
+
+        final var expected0 = new FlowLog();
+        expected0.setHour(3);
+        expected0.setBytesRx(2000);
+        expected0.setBytesTx(1402);
+        expected0.setSrcApp("srcApp1");
+        expected0.setDestApp("destApp1");
+        expected0.setVpcId(vpc0);
+
+        final var expected1 = new FlowLog();
+        expected1.setHour(3);
+        expected1.setBytesRx(1000);
+        expected1.setBytesTx(701);
+        expected1.setSrcApp("srcApp1");
+        expected1.setDestApp("destApp1");
+        expected1.setVpcId(vpc1);
+
+        assertThat(response)
+            .containsExactlyInAnyOrder(expected0, expected1);
     }
 
     @Test
@@ -73,7 +97,7 @@ public class AppTest {
         return postEntity(Entity.json(payload), 204);
     }
 
-    private Response getFlows(final int hour) {
+    private List<FlowLog> getFlows(final int hour) {
         final var response = APP.client()
                 .target(flowsUrl())
                 .queryParam("hour", hour)
@@ -82,6 +106,6 @@ public class AppTest {
                 .get();
         assertThat(response.getStatus()).isEqualTo(200);
         assertThat(response.getLength()).isGreaterThan(0);
-        return response;
+        return response.readEntity(GET_RESPONSE_TYPE);
     }
 }

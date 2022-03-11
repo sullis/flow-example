@@ -2,9 +2,12 @@ package io.github.sullis.netflix.server;
 
 import org.openapitools.model.FlowLog;
 
+import javax.ws.rs.core.GenericType;
 import java.util.List;
 
 public class TestUtils {
+    public static final GenericType<List<FlowLog>> GET_RESPONSE_TYPE = new GenericType<List<FlowLog>>() {};
+
     public static final List<FlowLog> makeLogs(final int hour, final List<String> vpcs) {
         return vpcs.stream().map(vpc -> makeLog(hour, vpc)).toList();
     }
