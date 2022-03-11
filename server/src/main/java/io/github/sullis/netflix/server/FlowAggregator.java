@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Stream;
 
 public class FlowAggregator {
     private Map<Integer /* hour */, Map<String, FlowTotal>> flowDataMap;
@@ -14,17 +15,11 @@ public class FlowAggregator {
     private ForkJoinPool forkJoinPool;
 
     public FlowAggregator() {
-        this(new ForkJoinPool(ForkJoinPool.getCommonPoolParallelism()));
-    }
-
-    public FlowAggregator(final ForkJoinPool forkJoinPool) {
-        this.forkJoinPool = forkJoinPool;
         this.flowDataMap = new ConcurrentHashMap<>(32, 0.75f, 100);
     }
 
     public void record(final List<FlowLog> logs) {
         logs.parallelStream().forEach(log -> {
-            flowLogCount.incrementAndGet();
             Map<String, FlowTotal> data = findByHour(log.getHour());
             final var key = buildKey(log);
             // TODO use AtomicLong instead of Long ???
@@ -35,6 +30,7 @@ public class FlowAggregator {
             }
             total.bytesRx.addAndGet(log.getBytesRx());
             total.bytesTx.addAndGet(log.getBytesTx());
+            flowLogCount.incrementAndGet();
         });
     }
 

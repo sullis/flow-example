@@ -38,8 +38,8 @@ public class FlowAggregatorTest {
             VPC_LIST.forEach(vpc -> {
                 final var log = new FlowLog();
                 log.setHour(hour);
-                log.setBytesRx(1230);
-                log.setBytesTx(2340);
+                log.setBytesRx(1000);
+                log.setBytesTx(700);
                 log.setVpcId(vpc);
                 log.setDestApp("destApp1");
                 log.setSrcApp("srcApp1");
@@ -53,8 +53,8 @@ public class FlowAggregatorTest {
             final var result = aggregator.findByHour(hour);
             assertThat(result.values()).hasSize(VPC_LIST.size());
             final var flowTotal = result.values().iterator().next();
-            assertThat(flowTotal.bytesRx.longValue()).isEqualTo(2460L);
-            assertThat(flowTotal.bytesTx.longValue()).isEqualTo(4680L);
+            assertThat(flowTotal.bytesRx.longValue()).isEqualTo(2000L);
+            assertThat(flowTotal.bytesTx.longValue()).isEqualTo(1400L);
         });
 
     }
