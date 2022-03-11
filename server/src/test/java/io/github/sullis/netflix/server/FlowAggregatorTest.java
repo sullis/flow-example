@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -45,7 +44,9 @@ public class FlowAggregatorTest {
             @Values(ints = { 1, 2, 3, 10 }) final int numReaders,
             @Values(ints = { 1, 2, 3, 10 }) final int numWriters) throws Exception {
         final List<Integer> hours = HOURS_LIST;
-        final var logs = hours.stream().map(h -> makeLog(h)).collect(Collectors.toList());
+        final var logs = hours.stream()
+                .map(h -> makeLog(h))
+                .toList();
         final var executor = Executors.newFixedThreadPool(numThreads);
         final var callables = new LinkedList<Callable<Boolean>>();
         for (int n = 0; n < numReaders; n++) {
