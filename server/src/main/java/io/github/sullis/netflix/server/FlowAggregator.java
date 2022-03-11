@@ -11,8 +11,8 @@ public class FlowAggregator {
     private Map<Integer /* hour */, Map<LookupKey, FlowTotal>> flowDataMap;
     public LongAdder flowLogCount = new LongAdder();
 
-    public FlowAggregator() {
-        this.flowDataMap = new ConcurrentHashMap<>(32, 0.75f, 100);
+    public FlowAggregator(final int concurrencyLevel) {
+        this.flowDataMap = new ConcurrentHashMap<>(32, 0.75f, concurrencyLevel);
     }
 
     public void record(final List<FlowLog> logs) {

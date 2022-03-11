@@ -33,7 +33,7 @@ public class FlowAggregatorTest {
 
     @BeforeEach
     public void beforeEach() {
-        aggregator = new FlowAggregator();
+        aggregator = new FlowAggregator(100);
     }
 
     @Test

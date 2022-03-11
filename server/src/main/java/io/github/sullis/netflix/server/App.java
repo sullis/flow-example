@@ -12,8 +12,7 @@ public class App
     @Override
     public void run(final AppConfig configuration,
                     final Environment environment) {
-        final var config = environment.getJerseyServletContainer().getServletConfig();
-        final var aggregator = new FlowAggregator();
+        final var aggregator = new FlowAggregator(configuration.getAggregatorConcurrencyLevel());
         environment.jersey().register(new FlowsResource(aggregator));
     }
 }
