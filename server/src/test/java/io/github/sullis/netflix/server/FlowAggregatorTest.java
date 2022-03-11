@@ -63,7 +63,7 @@ public class FlowAggregatorTest {
         final var futures = executor.invokeAll(callables);
         await().atMost(Duration.ofSeconds(5))
                 .pollDelay(Duration.ofMillis(100))
-                .until(() -> futures.stream().allMatch(f -> f.isDone()));
+                .until(() -> futures.stream().allMatch(f -> success(f)));
 
         assertThat(aggregator.getFlowLogCount()).isEqualTo(numWriters * logs.size());
 
@@ -116,4 +116,15 @@ public class FlowAggregatorTest {
         log.setSrcApp("srcApp1");
         return log;
     }
+
+    private static boolean success(final Future<Boolean> future) {
+        try {
+            return future.isDone()
+                    && !future.isCancelled()
+                    && future.get().booleanValue();
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
 }
