@@ -1,6 +1,8 @@
 package io.github.sullis.netflix.server;
 
 import org.openapitools.model.FlowLog;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Map;
@@ -9,6 +11,7 @@ import java.util.concurrent.atomic.LongAdder;
 
 public class FlowAggregator {
     private static final float DEFAULT_LOAD_FACTOR = 0.75f;
+    private static final Logger LOGGER = LoggerFactory.getLogger(FlowAggregator.class);
     private final Map<Integer /* hour */, Map<LookupKey, FlowTotal>> flowDataMap;
     private final LongAdder flowLogCount = new LongAdder();
 
@@ -28,13 +31,18 @@ public class FlowAggregator {
         //        performance. If I had more time, I would add
         //        load tests that confirm this.
         logs.parallelStream().forEach(log -> {
-            // TODO : verify that 'getHour' returns a valid hour
-            Map<LookupKey, FlowTotal> data = findByHour(log.getHour());
-            final var key = buildLookupKey(log);
-            final FlowTotal total = data.computeIfAbsent(key, (k) -> new FlowTotal());
-            total.bytesRx.add(log.getBytesRx());
-            total.bytesTx.add(log.getBytesTx());
-            flowLogCount.increment();
+            final Integer hour = log.getHour();
+            if ((hour != null) && Hours.RANGE.contains(log.getHour())) {
+                Map<LookupKey, FlowTotal> data = findByHour(log.getHour());
+                final var key = buildLookupKey(log);
+                final FlowTotal total = data.computeIfAbsent(key, (k) -> new FlowTotal());
+                total.bytesRx.add(log.getBytesRx());
+                total.bytesTx.add(log.getBytesTx());
+                flowLogCount.increment();
+            } else {
+                LOGGER.warn("FlowLog contains invalid hour: {}", hour);
+                // TODO : report a metric to DataDog or equivalent
+            }
         });
     }
 
