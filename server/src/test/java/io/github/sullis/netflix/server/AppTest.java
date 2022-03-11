@@ -80,6 +80,21 @@ public class AppTest {
     }
 
     @Test
+    public void serverAcceptsAllValidHours() {
+        Hours.stream().forEach(hour -> {
+            final var response = APP.client()
+                    .target(flowsUrl())
+                    .queryParam("hour", hour)
+                    .request()
+                    .accept(CONTENT_TYPE)
+                    .get();
+            assertThat(response.getStatus()).isEqualTo(200);
+            final var responseList = response.readEntity(GET_RESPONSE_TYPE);
+            assertThat(responseList).isNotNull();
+        });
+    }
+
+    @Test
     public void serverReturns400WhenPostBodyIsInvalid() {
         postEntity(Entity.json("{garbage"), 400);
     }
