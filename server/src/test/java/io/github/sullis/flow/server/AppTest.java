@@ -94,12 +94,13 @@ public class AppTest {
         final var futures = executor.invokeAll(callables);
         waitForSuccess(futures, Duration.ofSeconds(5));
 
-        final var flows = getFlows(3);
+        final var flows = getFlows(defaultHour);
         assertThat(flows).hasSizeGreaterThan(0);
         for (FlowLog flow: flows) {
             assertThat(flow.getHour()).isEqualTo(3);
             assertThat(flow.getBytesRx()).isGreaterThan(0);
             assertThat(flow.getBytesTx()).isGreaterThan(0);
+            assertThat(flow.getBytesRx()).isNotEqualTo(flow.getBytesTx());
         }
         executor.shutdown();
     }
