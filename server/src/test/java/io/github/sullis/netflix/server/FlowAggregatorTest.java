@@ -38,11 +38,10 @@ public class FlowAggregatorTest {
     public void concurrency(
             @Values(ints = { 1, 2, 3, 10 }) final int numThreads,
             @Values(ints = { 1, 2, 3, 10 }) final int numReaders,
-            @Values(ints = { 1, 2, 3, 10 }) final int numWriters)  {
+            @Values(ints = { 1, 2, 3, 10 }) final int numWriters) throws Exception {
         final List<Integer> hours = List.of(5, 10, 3, 12, 1);
         final var logs = hours.stream().map(h -> makeLog(h)).collect(Collectors.toList());
         final var executor = Executors.newFixedThreadPool(numThreads);
-        final var completionService = new ExecutorCompletionService<Boolean>(executor);
         final var callables = new LinkedList<Callable<Boolean>>();
         for (int n = 0; n < numReaders; n++) {
             Callable<Boolean> reader = () -> {
@@ -59,9 +58,7 @@ public class FlowAggregatorTest {
             callables.add(writer);
         }
         Collections.shuffle(callables, RANDOM);
-        final var futures = callables.stream()
-                .map(completionService::submit)
-                .collect(Collectors.toList());
+        final var futures = executor.invokeAll(callables);
         await().atMost(Duration.ofSeconds(5))
                 .pollDelay(Duration.ofMillis(100))
                 .until(() -> futures.stream().allMatch(f -> f.isDone()));
