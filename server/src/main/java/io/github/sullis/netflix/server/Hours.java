@@ -9,4 +9,8 @@ public class Hours {
     public static IntStream stream() {
         return IntStream.rangeClosed(RANGE.lowerEndpoint(), RANGE.upperEndpoint());
     }
+
+    public static boolean isValidHour(Integer hour) {
+        return (hour != null) && RANGE.contains(hour);
+    }
 }

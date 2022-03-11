@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.LongAdder;
 
+import static io.github.sullis.netflix.server.Hours.isValidHour;
+
 public class FlowAggregator {
     private static final float DEFAULT_LOAD_FACTOR = 0.75f;
     private static final Logger LOGGER = LoggerFactory.getLogger(FlowAggregator.class);
@@ -32,7 +34,7 @@ public class FlowAggregator {
         //        load tests that confirm this.
         logs.parallelStream().forEach(log -> {
             final Integer hour = log.getHour();
-            if ((hour != null) && Hours.RANGE.contains(log.getHour())) {
+            if (isValidHour(hour)) {
                 Map<LookupKey, FlowTotal> data = findByHour(log.getHour());
                 final var key = buildLookupKey(log);
                 final FlowTotal total = data.computeIfAbsent(key, (k) -> new FlowTotal());
