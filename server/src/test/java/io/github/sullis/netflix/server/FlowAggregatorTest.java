@@ -57,7 +57,9 @@ public class FlowAggregatorTest {
             };
             callables.add(writer);
         }
+
         Collections.shuffle(callables, RANDOM);
+
         final var futures = executor.invokeAll(callables);
         await().atMost(Duration.ofSeconds(5))
                 .pollDelay(Duration.ofMillis(100))
