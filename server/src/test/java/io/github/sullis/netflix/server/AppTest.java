@@ -24,7 +24,7 @@ import java.util.List;
  */
 @ExtendWith(DropwizardExtensionsSupport.class)
 public class AppTest {
-    private static String contentType = "application/json";
+    private static final String CONTENT_TYPE = "application/json";
 
     private static final DropwizardAppExtension<AppConfig> APP = new DropwizardAppExtension<>(
             App.class,
@@ -63,7 +63,7 @@ public class AppTest {
         final var response = APP.client()
                 .target(flowsUrl())
                 .request()
-                .accept(contentType)
+                .accept(CONTENT_TYPE)
                 .post(entity);
         assertThat(response.getStatus()).isEqualTo(expectedStatus);
         return response;
@@ -78,7 +78,7 @@ public class AppTest {
                 .target(flowsUrl())
                 .queryParam("hour", hour)
                 .request()
-                .accept(contentType)
+                .accept(CONTENT_TYPE)
                 .get();
         assertThat(response.getStatus()).isEqualTo(200);
         assertThat(response.getLength()).isGreaterThan(0);
