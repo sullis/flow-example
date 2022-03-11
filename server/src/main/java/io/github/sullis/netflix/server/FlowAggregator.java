@@ -5,11 +5,11 @@ import org.openapitools.model.FlowLog;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.LongAdder;
 
 public class FlowAggregator {
     private Map<Integer /* hour */, Map<String, FlowTotal>> flowDataMap;
-    public AtomicLong flowLogCount = new AtomicLong(0);
+    public LongAdder flowLogCount = new LongAdder();
 
     public FlowAggregator() {
         this.flowDataMap = new ConcurrentHashMap<>(32, 0.75f, 100);
@@ -19,34 +19,24 @@ public class FlowAggregator {
         logs.parallelStream().forEach(log -> {
             Map<String, FlowTotal> data = findByHour(log.getHour());
             final var key = buildKey(log);
-            // TODO use AtomicLong instead of Long ???
-            FlowTotal total = data.get(key);
-            if (null == total) {
-                total = new FlowTotal();
-                data.put(key, total);
-            }
-            total.bytesRx.addAndGet(log.getBytesRx());
-            total.bytesTx.addAndGet(log.getBytesTx());
-            flowLogCount.incrementAndGet();
+            FlowTotal total = data.computeIfAbsent(key, (k) -> new FlowTotal());
+            total.bytesRx.add(log.getBytesRx());
+            total.bytesTx.add(log.getBytesTx());
+            flowLogCount.increment();
         });
     }
 
     public class FlowTotal {
-        public final AtomicLong bytesRx = new AtomicLong(0);
-        public final AtomicLong bytesTx = new AtomicLong(0);
+        public final LongAdder bytesRx = new LongAdder();
+        public final LongAdder bytesTx = new LongAdder();
     }
 
     public Map<String, FlowTotal> findByHour(final Integer hour) {
-        Map<String, FlowTotal> result = flowDataMap.get(hour);
-        if (null == result) {
-            result = new ConcurrentHashMap<>();
-            flowDataMap.put(hour, result);
-        }
-        return result;
+        return flowDataMap.computeIfAbsent(hour, (h) -> new ConcurrentHashMap<>());
     }
 
     public long getFlowLogCount() {
-        return flowLogCount.longValue();
+        return flowLogCount.sum();
     }
 
     private static String buildKey(final FlowLog log) {
