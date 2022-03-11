@@ -18,6 +18,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.IntStream;
 
+import static io.github.sullis.netflix.server.TestUtils.makeFlowLog;
 import static io.github.sullis.netflix.server.TestUtils.makeFlowLogs;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
@@ -42,6 +43,18 @@ public class FlowAggregatorTest {
             assertThat(aggregator.findByHour(hour)).isEmpty();
         });
     }
+
+    @Test
+    public void testInvalidHourIsIgnored() {
+        Integer[] invalidHours = { -1, 25, null };
+        for (Integer invalidHour : invalidHours) {
+            final var log = makeFlowLog(3, "vpc-0");
+            log.setHour(invalidHour);
+            aggregator.record(List.of(log));
+            assertThat(aggregator.getFlowLogCount()).isZero();
+        }
+    }
+
 
     @CartesianTest
     public void concurrency(
