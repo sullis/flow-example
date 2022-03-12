@@ -166,3 +166,7 @@ This project uses:
 - [awaitility](https://github.com/awaitility/awaitility)
 - [assertj-core](https://github.com/assertj/assertj-core)
 - [JsonUnit](https://github.com/lukas-krecan/JsonUnit) 
+
+# Continuous integration
+
+This project uses [GitHub Actions](https://github.com/sullis/flow-example/actions) for CI builds.
