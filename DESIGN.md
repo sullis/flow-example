@@ -13,7 +13,7 @@ This application is written in Java. It is built on top of the Dropwizard framew
 
 The `/flows` endpoint accepts HTTP POST requests and HTTP GET requests.
 
-The [FlowResource](https://github.com/sullis/flow-example/blob/main/server/src/main/java/io/github/sullis/flow/server/FlowsResource.java) class implements the REST API. It uses JAX-RS annotations: @GET and @POST. These annotations map HTTP operations to Java methods. 
+The [FlowResource](https://github.com/sullis/flow-example/blob/main/server/src/main/java/io/github/sullis/flow/server/FlowsResource.java) class implements the REST API. It uses JAX-RS annotations @GET and @POST. These annotations map HTTP methods to Java methods. 
 
 # Assumptions
 - Requests will be a mix of read operations (HTTP GET) and write operations (HTTP POST)
