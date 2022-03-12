@@ -140,7 +140,7 @@ The @CartesianTest annotation tells JUnit Pioneer to run the test with a varying
 I created an OpenAPI spec that describes the Flows API:
 - [api.yaml](https://github.com/sullis/flow-example/blob/main/openapi/src/main/resources/api.yaml)
 
-I was planning to use the OpenAPI generator to generate a JAX-RX resource class. However, there was a problem 
+I was planning to use the OpenAPI generator to generate a JAX-RS resource class. However, there was a problem 
 with the JAX-RS source code generator. I decided to use only one of the generated source files: ```FlowLog.java```
 
 If I had additional time, I would re-examine the generated code.
