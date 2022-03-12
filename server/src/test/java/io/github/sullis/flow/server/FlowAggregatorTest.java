@@ -61,7 +61,7 @@ public class FlowAggregatorTest {
 
     @CartesianTest
     public void concurrency(
-            @Values(ints = { 1, 20 }) final int numThreads,
+            @Values(ints = { 1, 10, 20 }) final int numThreads,
             @Values(ints = { 1, 3, 10 }) final int numReaders,
             @Values(ints = { 1, 3, 10 }) final int numWriters) throws Exception {
         final List<Integer> hours = HOURS_LIST;
