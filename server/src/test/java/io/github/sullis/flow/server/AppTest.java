@@ -1,5 +1,6 @@
 package io.github.sullis.flow.server;
 
+import net.javacrumbs.jsonunit.core.Option;
 import org.junit.jupiter.api.Test;
 
 import static io.github.sullis.flow.server.TestUtils.*;
@@ -23,6 +24,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
+
+import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 
 /**
 
@@ -173,6 +176,38 @@ public class AppTest {
         postEntity(Entity.text(""), 415);
     }
 
+    @Test
+    public void example() {
+        final var requestPayload = loadResource("example/request_payload.json");
+        System.out.println(requestPayload);
+        final var response = APP.client()
+            .target(flowsUrl())
+            .request()
+            .post(Entity.json(requestPayload));
+        assertThat(response.getStatus()).isEqualTo(204);
+
+        final var fixture1 = loadResource("example/response_hour1.json");
+        final var fixture2 = loadResource("example/response_hour2.json");
+        final var fixture3 = loadResource("example/response_hour3.json");
+
+        final var flows1 = getFlowsResponse(1).readEntity(String.class);
+        assertThatJson(flows1)
+                .when(Option.IGNORING_ARRAY_ORDER)
+                .isEqualTo(fixture1);
+
+        final var flows2 = getFlowsResponse(2).readEntity(String.class);
+        System.out.println("flows2: " + flows2);
+        assertThatJson(flows2)
+                .when(Option.IGNORING_ARRAY_ORDER)
+                .isEqualTo(fixture2);
+
+        final var flows3 = getFlowsResponse(3).readEntity(String.class);
+        assertThatJson(flows3)
+                .when(Option.IGNORING_ARRAY_ORDER)
+                .isEqualTo(fixture3);
+    }
+
+
     private Response postEntity(final Entity entity, final int expectedStatus) {
         final var response = APP.client()
                 .target(flowsUrl())
@@ -187,7 +222,7 @@ public class AppTest {
         return postEntity(Entity.json(payload), 204);
     }
 
-    private List<FlowLog> getFlows(final int hour) {
+    private Response getFlowsResponse(final int hour) {
         final var response = APP.client()
                 .target(flowsUrl())
                 .queryParam("hour", hour)
@@ -196,6 +231,10 @@ public class AppTest {
                 .get();
         assertThat(response.getStatus()).isEqualTo(200);
         assertThat(response.getLength()).isGreaterThan(0);
-        return response.readEntity(GET_RESPONSE_TYPE);
+        return response;
+    }
+
+    private List<FlowLog> getFlows(final int hour) {
+        return getFlowsResponse(hour).readEntity(GET_RESPONSE_TYPE);
     }
 }

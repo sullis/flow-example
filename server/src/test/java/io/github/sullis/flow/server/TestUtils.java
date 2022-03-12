@@ -1,8 +1,11 @@
 package io.github.sullis.flow.server;
 
+import com.google.common.io.Resources;
 import org.openapitools.model.FlowLog;
 
 import javax.ws.rs.core.GenericType;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.List;
 import java.util.concurrent.Future;
@@ -43,4 +46,12 @@ public class TestUtils {
         }
     }
 
+    public static String loadResource(final String resourceName) {
+        final var url = Resources.getResource(resourceName);
+        try {
+            return Resources.asCharSource(url, StandardCharsets.UTF_8).read();
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
 }
