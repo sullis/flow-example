@@ -44,16 +44,102 @@ and
 ```java
 public Map<LookupKey, FlowTotal> findByHour(final Integer hour)
 ```
+## Internal data structure
+
+FlowAggretator's internal data structure is an array of ConcurrentHashMap's.
+
+The array is a fixed size: 24.  Each slot in the array will be used to store data for a given hour. We assume that the range of valid hours is 0 to 23 (inclusive).
+
+Each array element is an object of type ConcurrentHashMap<LookupKey, FlowTotal>.
+
+LookupKey is a composite key, derived from a FlowLog's significant fields.
+FlowTotal is an object that contains two fields:
+1) the number of bytes received
+2) the number of bytes transmitted
+
+For each FlowLog object, the FlowAggregator will:
+1) fetch the ConcurrentHashMap at array index `flowLog.getHour`
+2) create a LookupKey from the FlowLog object
+3) use the LookupKey to fetch the FlowTotal object from the ConcurrentHashMap
+4) increment FlowTotal.bytesRx
+5) increment FlowTotal.bytesTx
+
+ConcurrentHashMap was chosen because:
+- ConcurrentHashMap is threadsafe
+- retrieval operations generally do not block
+- retrieval operations may overlap with update operations
+- ConcurrentHashMap can be tuned for concurrently updating threads (concurrencyLevel)
+
+# FlowTotal
+FlowTotal contains two fields:
+```java
+    public final LongAdder bytesRx = new LongAdder();
+    public final LongAdder bytesTx = new LongAdder();
+```
+
+The JDK documentation describes LongAdder as an alternative to AtomicLong: 
+```
+This class [LongAdder] is usually preferable to AtomicLong when multiple threads update a common sum
+```
+
+If I had more time, I would evaluate the suitability of LongAdder vs AtomicLong.
+
+# Concurrency testing:  FlowAggregatorTest
+
+FlowAggregatorTest contains a test called `concurrency`:
+
+```java
+    @CartesianTest
+    public void concurrency(
+            @Values(ints = { 1, 10, 20 }) final int numThreads,
+            @Values(ints = { 1, 3, 10 }) final int numReaders,
+            @Values(ints = { 1, 3, 10 }) final int numWriters)
+```
+
+The test uses junit-pioneer [@CartesianTest](https://junit-pioneer.org/docs/cartesian-product/) to execute different scenarios:
+- number of threads
+- number of read operations
+- number of write operations
+
+# Concurrency testing:  AppConcurrencyTest
+
+AppConcurrencyTest generates multiple HTTP requests. It attempts to intersperse read operations with write operations.
+
+```java
+    @CartesianTest
+    public void concurrency(
+            @CartesianTest.Values(ints = { 1, 2, 10 }) final int numReaders,
+            @CartesianTest.Values(ints = { 1, 2, 10 }) final int numWriters)
+```
+
+The @CartesianTest annotation tells JUnit Pioneer to run the test with a varying number of:
+- readers
+- writers
 
 ## OpenAPI
+I created an OpenAPI spec that defines the Flows API:
 - [api.yaml](https://github.com/sullis/flow-example/blob/main/openapi/src/main/resources/api.yaml)
 
+I was planning to use the OpenAPI generator to generate a JAX-RX resource class. However, there was a problem 
+with the code generator. I decided to use only one of the generated source files: ```FlowLog.java```
+
+If I had additional time, I would re-examine the generated code.
+
+# Side note
+I am a committer on two OpenAPI projects
+- [openapi-generator](https://github.com/OpenAPITools/openapi-generator)
+- [guardrail](https://guardrail.dev/)
+
 ## Core libraries
-- [openapi-generator Maven plugin](https://github.com/OpenAPITools/openapi-generator)
-- [Dropwizard](https://www.dropwizard.io/en/latest/)
-- [jackson-databind](https://github.com/FasterXML/jackson-databind)
+
+This project uses:
+- [openapi-generator Maven plugin](https://github.com/OpenAPITools/openapi-generator) - OpenAPI code generator
+- [Dropwizard](https://www.dropwizard.io/en/latest/) - REST API framework
+- [jackson-databind](https://github.com/FasterXML/jackson-databind) - JSON serialization
 
 ## Testing libraries
+
+This project uses:
 - [JUnit 5](https://junit.org/junit5/docs/current/user-guide/)
 - [junit-pioneer](https://junit-pioneer.org/docs/)
 - [dropwizard-testing](https://www.dropwizard.io/en/latest/manual/testing.html)
