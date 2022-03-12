@@ -22,9 +22,15 @@ The [FlowResource](https://github.com/sullis/flow-example/blob/main/server/src/m
 The ratio of read-to-write operations was not specified in the design document.
 
 ## Core classes:
+- [FlowResource](https://github.com/sullis/flow-example/blob/main/server/src/main/java/io/github/sullis/flow/server/FlowsResource.java)
 - [FlowAggregator](https://github.com/sullis/flow-example/blob/main/server/src/main/java/io/github/sullis/flow/server/FlowAggregator.java)
-- [FlowTotal](https://github.com/sullis/flow-example/blob/main/server/src/main/java/io/github/sullis/flow/server/FlowTotal.java)
-- [LookupKey](https://github.com/sullis/flow-example/blob/main/server/src/main/java/io/github/sullis/flow/server/LookupKey.java)
+
+FlowResource receives HTTP requests. FlowResource is responsible for calling appropriate FlowAggregator method.
+
+| HTTP request | Operation                 |
+|--------------|---------------------------|
+| HTTP POST    | FlowAggregator record     |
+| HTTP GET     | FlowAggregator findByHour |
 
 ## FlowAggregator
 
