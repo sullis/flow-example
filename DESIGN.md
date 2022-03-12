@@ -70,6 +70,21 @@ ConcurrentHashMap was chosen because:
 - retrieval operations may overlap with update operations
 - ConcurrentHashMap can be tuned for concurrently updating threads (concurrencyLevel)
 
+# ConcurrentHashMap constructor
+
+The ConcurrentHashMap class provides a constructor that accepts three parameters:
+```java
+ConcurrentHashMap(int initialCapacity, float loadFactor, int concurrencyLevel)
+```
+
+It is important to construct the map with parameter values that match the expected workload.
+
+Since there will be multiple updating threads, we should give special consideration to the `concurrencyLevel` parameter:
+
+```
+concurrencyLevel - the estimated number of concurrently updating threads
+```
+
 # FlowTotal
 FlowTotal contains two fields:
 ```java
