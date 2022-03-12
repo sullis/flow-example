@@ -42,8 +42,10 @@ public class FlowAggregator {
             if (isValid(log)) {
                 try {
                     processLog(log);
+                    flowLogCount.increment();
                 } catch (Exception ex) {
                     LOGGER.warn("FlowLog processing error: " + log, ex);
+                    invalidFlowLogCount.increment();
                 }
             } else {
                 LOGGER.warn("invalid FlowLog: {}", log);
@@ -59,7 +61,6 @@ public class FlowAggregator {
         final FlowTotal total = data.computeIfAbsent(key, (k) -> new FlowTotal());
         total.bytesRx.add(log.getBytesRx());
         total.bytesTx.add(log.getBytesTx());
-        flowLogCount.increment();
     }
 
     public Map<LookupKey, FlowTotal> findByHour(final Integer hour) {
