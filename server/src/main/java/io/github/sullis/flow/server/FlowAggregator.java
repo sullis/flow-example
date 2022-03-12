@@ -12,6 +12,7 @@ import java.util.concurrent.atomic.LongAdder;
 
 import static io.github.sullis.flow.server.Hours.HOURS_PER_DAY;
 import static io.github.sullis.flow.server.Hours.isValidHour;
+import static io.github.sullis.flow.server.Utils.isValid;
 
 public class FlowAggregator {
     private static final float DEFAULT_LOAD_FACTOR = 0.75f;
@@ -52,28 +53,6 @@ public class FlowAggregator {
                 // TODO : report a metric to DataDog or equivalent
             }
         });
-    }
-
-    private static boolean isValid(final FlowLog log) {
-        if (!isValidHour(log.getHour())) {
-            return false;
-        }
-        if ((log.getBytesRx() == null) || (log.getBytesRx() < 0)) {
-            return false;
-        }
-        if ((log.getBytesTx() == null) || (log.getBytesTx() < 0)) {
-            return false;
-        }
-        if (log.getSrcApp() == null) {
-            return false;
-        }
-        if (log.getDestApp() == null) {
-            return false;
-        }
-        if (log.getVpcId() == null) {
-            return false;
-        }
-        return true;
     }
 
     public Map<LookupKey, FlowTotal> findByHour(final Integer hour) {
