@@ -25,7 +25,7 @@ The ratio of read-to-write operations was not specified in the design document.
 - [FlowResource](https://github.com/sullis/flow-example/blob/main/server/src/main/java/io/github/sullis/flow/server/FlowsResource.java)
 - [FlowAggregator](https://github.com/sullis/flow-example/blob/main/server/src/main/java/io/github/sullis/flow/server/FlowAggregator.java)
 
-FlowResource receives HTTP requests. FlowResource is responsible for calling appropriate FlowAggregator method.
+FlowResource receives HTTP requests. FlowResource is responsible for calling the appropriate FlowAggregator method.
 
 | HTTP request            | Operation                                          |
 |-------------------------|----------------------------------------------------|
