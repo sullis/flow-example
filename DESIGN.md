@@ -27,10 +27,10 @@ The ratio of read-to-write operations was not specified in the design document.
 
 FlowResource receives HTTP requests. FlowResource is responsible for calling appropriate FlowAggregator method.
 
-| HTTP request | Operation                                    |
-|--------------|----------------------------------------------|
-| HTTP POST    | FlowResource calls FlowAggregator record     |
-| HTTP GET     | FlowResource calls FlowAggregator findByHour |
+| HTTP request            | Operation                                          |
+|-------------------------|----------------------------------------------------|
+| HTTP POST /flows        | FlowResource calls FlowAggregator record(flowLogs) |
+| HTTP GET  /flows?hour=3 | FlowResource calls FlowAggregator findByHour(hour) |
 
 ## FlowAggregator
 
