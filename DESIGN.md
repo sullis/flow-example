@@ -170,3 +170,12 @@ This project uses:
 # Continuous integration
 
 This project uses [GitHub Actions](https://github.com/sullis/flow-example/actions) for CI builds.
+
+# Observations
+
+Implementing the concurrency tests was one of the challenging aspects of the project.
+
+I needed to ensure that the concurrency test was executing a mix read and write operations.
+
+LongAdder was not my first choice for storing the byte totals. I am not 100% certain
+that this was the best data type. AtomicLong is a possible alternative.
