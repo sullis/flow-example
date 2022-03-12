@@ -9,9 +9,19 @@ This application is written in Java. It is built on top of the Dropwizard framew
 - validation framework
 - logging
 
+# REST API
+
+The `/flows` endpoint accepts HTTP POST requests and HTTP GET requests.
+
+The [FlowResource](https://github.com/sullis/flow-example/blob/main/server/src/main/java/io/github/sullis/flow/server/FlowsResource.java) class implements the REST API. It uses JAX-RS annotations: @GET and @POST. These annotations map HTTP operations to Java methods.  
+
+# Assumptions
+- Requests will be a mix of read operations (HTTP GET) and write operations (HTTP POST) 
+- The application must be able to handle concurrent read and write operations
+
+The ratio of read-to-write operations was not specified in the design document.
 
 ## Core classes:
-- [FlowResource](https://github.com/sullis/flow-example/blob/main/server/src/main/java/io/github/sullis/flow/server/FlowsResource.java)
 - [FlowAggregator](https://github.com/sullis/flow-example/blob/main/server/src/main/java/io/github/sullis/flow/server/FlowAggregator.java)
 - [FlowTotal](https://github.com/sullis/flow-example/blob/main/server/src/main/java/io/github/sullis/flow/server/FlowTotal.java)
 - [LookupKey](https://github.com/sullis/flow-example/blob/main/server/src/main/java/io/github/sullis/flow/server/LookupKey.java)
