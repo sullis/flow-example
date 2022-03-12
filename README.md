@@ -1,13 +1,15 @@
 # flow-example
 
-This application requires on JDK 17 and Apache Maven.
+This application requires:
+- JDK 17
+- Apache Maven
 
 # Setup
 
-- [Apache Maven](https://maven.apache.org/index.html)
-- [Azul Zulu JDK](https://www.azul.com/downloads/?version=java-17-lts&package=jdk)
+- install [Apache Maven](https://maven.apache.org/index.html)
+- install [Azul Zulu JDK 17](https://www.azul.com/downloads/?version=java-17-lts&package=jdk)
 
-# Maven build
+# Maven build command
 
 ```
 mvn clean test
@@ -18,4 +20,3 @@ mvn clean test
 ```
 make run
 ```
-
