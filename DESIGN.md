@@ -1,5 +1,15 @@
 # Design
 
+This application is written in Java. It is built on top of the Dropwizard framework. I chose Dropwizard because it includes these out of the box capabilities:
+
+- HTTP connectors
+- REST API support (via JAX-RS annotations)
+- app configuration
+- JSON serialization
+- parameter validation
+- logging
+
+
 ## Core classes:
 - [FlowResource](https://github.com/sullis/flow-example/blob/main/server/src/main/java/io/github/sullis/flow/server/FlowsResource.java)
 - [FlowAggregator](https://github.com/sullis/flow-example/blob/main/server/src/main/java/io/github/sullis/flow/server/FlowAggregator.java)
