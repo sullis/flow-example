@@ -3,9 +3,9 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>io.github.sullis</groupId>
-  <artifactId>flow-draft</artifactId>
+  <artifactId>flow-example</artifactId>
   <packaging>pom</packaging>
-  <name>flow-draft</name>
+  <name>flow-example</name>
   <version>0.0.1-SNAPSHOT</version>
   <licenses>
     <license>

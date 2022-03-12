@@ -2,14 +2,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <parent>
     <groupId>io.github.sullis</groupId>
-    <artifactId>flow-draft</artifactId>
+    <artifactId>flow-example</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>io.github.sullis</groupId>
-  <artifactId>flow-draft-server</artifactId>
+  <artifactId>flow-example-server</artifactId>
   <packaging>jar</packaging>
-  <name>flow-draft-server</name>
+  <name>flow-example-server</name>
   <version>0.0.1-SNAPSHOT</version>
   <licenses>
     <license>
