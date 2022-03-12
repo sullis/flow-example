@@ -20,6 +20,7 @@ public class FlowAggregator {
     private final ConcurrentHashMap<LookupKey, FlowTotal>[] flowDataArray;
     private final LongAdder flowLogCount = new LongAdder();
     private final LongAdder invalidFlowLogCount = new LongAdder();
+    private final LongAdder processLogExceptionCount = new LongAdder();
 
     /**
      *
@@ -45,7 +46,7 @@ public class FlowAggregator {
                     flowLogCount.increment();
                 } catch (Exception ex) {
                     LOGGER.warn("FlowLog processing error: " + log, ex);
-                    invalidFlowLogCount.increment();
+                    processLogExceptionCount.increment();
                 }
             } else {
                 LOGGER.warn("invalid FlowLog: {}", log);
