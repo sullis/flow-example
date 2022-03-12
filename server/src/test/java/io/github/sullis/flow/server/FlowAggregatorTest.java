@@ -61,9 +61,9 @@ public class FlowAggregatorTest {
 
     @CartesianTest
     public void concurrency(
-            @Values(ints = { 1, 5, 10, 25 }) final int numThreads,
-            @Values(ints = { 1, 2, 3, 10 }) final int numReaders,
-            @Values(ints = { 1, 2, 3, 10 }) final int numWriters) throws Exception {
+            @Values(ints = { 1, 20 }) final int numThreads,
+            @Values(ints = { 1, 3, 10 }) final int numReaders,
+            @Values(ints = { 1, 3, 10 }) final int numWriters) throws Exception {
         final List<Integer> hours = HOURS_LIST;
         final int numVpcs = VPC_LIST.size();
         final var logs = hours.stream()
