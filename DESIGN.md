@@ -1,6 +1,6 @@
 # Design
 
-This application is written in Java. It is built on top of the Dropwizard framework. I chose Dropwizard because it includes these out of the box capabilities:
+This application is written in Java. It is built on top of the Dropwizard framework. I chose Dropwizard because it includes these capabilities:
 
 - HTTP connectors
 - REST API support (via JAX-RS annotations)
