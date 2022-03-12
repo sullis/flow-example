@@ -1,6 +1,6 @@
 # flow-example
 
-This application requires:
+This is a Java application. It requires:
 - JDK 17
 - Apache Maven
 
