@@ -6,7 +6,7 @@ This application is written in Java. It is built on top of the Dropwizard framew
 - REST API support (via JAX-RS annotations)
 - app configuration
 - JSON serialization
-- parameter validation
+- validation framework
 - logging
 
 
@@ -24,6 +24,7 @@ This application is written in Java. It is built on top of the Dropwizard framew
 ## Core libraries
 - [openapi-generator Maven plugin](https://github.com/OpenAPITools/openapi-generator)
 - [Dropwizard](https://www.dropwizard.io/en/latest/)
+
 
 ## Testing libraries
 - [JUnit 5](https://junit.org/junit5/docs/current/user-guide/)
