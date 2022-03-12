@@ -41,18 +41,26 @@ public class FlowAggregator {
         //        load tests that confirm this.
         logs.parallelStream().forEach(log -> {
             if (isValid(log)) {
-                Map<LookupKey, FlowTotal> data = findByHour(log.getHour());
-                final var key = buildLookupKey(log);
-                final FlowTotal total = data.computeIfAbsent(key, (k) -> new FlowTotal());
-                total.bytesRx.add(log.getBytesRx());
-                total.bytesTx.add(log.getBytesTx());
-                flowLogCount.increment();
+                try {
+                    processLog(log);
+                } catch (Exception ex) {
+                    LOGGER.warn("FlowLog processing error: " + log, ex);
+                }
             } else {
                 LOGGER.warn("invalid FlowLog: {}", log);
                 invalidFlowLogCount.increment();
                 // TODO : report a metric to DataDog or equivalent
             }
         });
+    }
+
+    private void processLog(final FlowLog log) {
+        Map<LookupKey, FlowTotal> data = findByHour(log.getHour());
+        final var key = buildLookupKey(log);
+        final FlowTotal total = data.computeIfAbsent(key, (k) -> new FlowTotal());
+        total.bytesRx.add(log.getBytesRx());
+        total.bytesTx.add(log.getBytesTx());
+        flowLogCount.increment();
     }
 
     public Map<LookupKey, FlowTotal> findByHour(final Integer hour) {
