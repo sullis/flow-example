@@ -18,6 +18,17 @@ This application is written in Java. It is built on top of the Dropwizard framew
 
 ## FlowAggregator
 
+FlowAggregator exposes two public methods:
+```java
+public void record(final List<FlowLog> logs)
+```
+
+and
+
+```java
+public Map<LookupKey, FlowTotal> findByHour(final Integer hour)
+```
+
 ## OpenAPI
 - [api.yaml](https://github.com/sullis/flow-example/blob/main/openapi/src/main/resources/api.yaml)
 
