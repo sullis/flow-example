@@ -46,7 +46,7 @@ public Map<LookupKey, FlowTotal> findByHour(final Integer hour)
 ```
 ## Internal data structure
 
-FlowAggretator's internal data structure is an array of ConcurrentHashMap's.
+FlowAggregator's internal data structure is an array of ConcurrentHashMap's.
 
 The array is a fixed size: 24.  Each slot in the array will be used to store data for a given hour. We assume that the range of valid hours is 0 to 23 (inclusive).
 
