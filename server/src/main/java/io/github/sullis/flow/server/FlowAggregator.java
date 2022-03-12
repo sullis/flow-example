@@ -39,8 +39,7 @@ public class FlowAggregator {
         //        performance. If I had more time, I would add
         //        load tests that confirm this.
         logs.parallelStream().forEach(log -> {
-            final Integer hour = log.getHour();
-            if (isValidHour(hour)) {
+            if (isValid(log)) {
                 Map<LookupKey, FlowTotal> data = findByHour(log.getHour());
                 final var key = buildLookupKey(log);
                 final FlowTotal total = data.computeIfAbsent(key, (k) -> new FlowTotal());
@@ -48,11 +47,33 @@ public class FlowAggregator {
                 total.bytesTx.add(log.getBytesTx());
                 flowLogCount.increment();
             } else {
-                LOGGER.warn("FlowLog contains invalid hour: {}", hour);
+                LOGGER.warn("invalid FlowLog: {}", log);
                 invalidFlowLogCount.increment();
                 // TODO : report a metric to DataDog or equivalent
             }
         });
+    }
+
+    private static boolean isValid(final FlowLog log) {
+        if (!isValidHour(log.getHour())) {
+            return false;
+        }
+        if ((log.getBytesRx() == null) || (log.getBytesRx() < 0)) {
+            return false;
+        }
+        if ((log.getBytesTx() == null) || (log.getBytesTx() < 0)) {
+            return false;
+        }
+        if (log.getSrcApp() == null) {
+            return false;
+        }
+        if (log.getDestApp() == null) {
+            return false;
+        }
+        if (log.getVpcId() == null) {
+            return false;
+        }
+        return true;
     }
 
     public Map<LookupKey, FlowTotal> findByHour(final Integer hour) {
