@@ -100,33 +100,6 @@ public class AppTest extends AbstractDropwizardTest {
         executor.shutdown();
     }
 
-    private List<Callable<Boolean>> makeWriters(final int numWriters, final int hour) {
-        List<Callable<Boolean>> result = new LinkedList<>();
-        for (int i = 0; i < numWriters; i++) {
-            Callable<Boolean> writer = () -> {
-                final var response = postFlows(List.of(
-                                                    makeFlowLog(hour, "vpc-0"),
-                                                    makeFlowLog(hour + 1, "vpc-0"),
-                                                    makeFlowLog(hour, "vpc-0")));
-
-                return response.getStatus() == 204;
-            };
-            result.add(writer);
-        }
-        return result;
-    }
-
-    private List<Callable<Boolean>> makeReaders(final int numReaders, final int hour) {
-        List<Callable<Boolean>> result = new LinkedList<>();
-        for (int i = 0; i < numReaders; i++) {
-            Callable<Boolean> reader = () -> {
-                return (getFlows(hour) != null);
-            };
-            result.add(reader);
-        }
-        return result;
-    }
-
     @Test
     public void serverRejectsInvalidHour() {
         final var response = getClient()
@@ -172,4 +145,32 @@ public class AppTest extends AbstractDropwizardTest {
     protected DropwizardAppExtension getExtension() {
         return APP;
     }
+
+    private List<Callable<Boolean>> makeWriters(final int numWriters, final int hour) {
+        List<Callable<Boolean>> result = new LinkedList<>();
+        for (int i = 0; i < numWriters; i++) {
+            Callable<Boolean> writer = () -> {
+                final var response = postFlows(List.of(
+                        makeFlowLog(hour, "vpc-0"),
+                        makeFlowLog(hour + 1, "vpc-0"),
+                        makeFlowLog(hour, "vpc-0")));
+
+                return response.getStatus() == 204;
+            };
+            result.add(writer);
+        }
+        return result;
+    }
+
+    private List<Callable<Boolean>> makeReaders(final int numReaders, final int hour) {
+        List<Callable<Boolean>> result = new LinkedList<>();
+        for (int i = 0; i < numReaders; i++) {
+            Callable<Boolean> reader = () -> {
+                return (getFlows(hour) != null);
+            };
+            result.add(reader);
+        }
+        return result;
+    }
+
 }
