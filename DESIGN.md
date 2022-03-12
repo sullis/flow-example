@@ -54,8 +54,9 @@ We assume that the range of valid hours is 0 to 23 (inclusive).
 
 Each array element is an object of type ConcurrentHashMap<LookupKey, FlowTotal>.
 
-LookupKey is a composite key, derived from a FlowLog's significant fields.
-FlowTotal is an object that contains two fields:
+[LookupKey](https://github.com/sullis/flow-example/blob/main/server/src/main/java/io/github/sullis/flow/server/LookupKey.java) is a composite key, derived from a FlowLog's significant fields.
+
+[FlowTotal](https://github.com/sullis/flow-example/blob/main/server/src/main/java/io/github/sullis/flow/server/FlowTotal.java) is an object that contains two fields:
 1) the number of bytes received
 2) the number of bytes transmitted
 
@@ -86,6 +87,8 @@ Since there will be multiple updating threads, we should give special considerat
 ```
 concurrencyLevel - the estimated number of concurrently updating threads
 ```
+
+If I had more time, I would evaluate various ConcurrentHashMap constructor parameter values.
 
 # FlowTotal
 FlowTotal contains two fields:
@@ -134,11 +137,11 @@ The @CartesianTest annotation tells JUnit Pioneer to run the test with a varying
 - writers
 
 ## OpenAPI
-I created an OpenAPI spec that defines the Flows API:
+I created an OpenAPI spec that describes the Flows API:
 - [api.yaml](https://github.com/sullis/flow-example/blob/main/openapi/src/main/resources/api.yaml)
 
 I was planning to use the OpenAPI generator to generate a JAX-RX resource class. However, there was a problem 
-with the code generator. I decided to use only one of the generated source files: ```FlowLog.java```
+with the JAX-RS source code generator. I decided to use only one of the generated source files: ```FlowLog.java```
 
 If I had additional time, I would re-examine the generated code.
 
