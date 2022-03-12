@@ -36,9 +36,8 @@ public class FlowAggregator {
     }
 
     public void record(final List<FlowLog> logs) {
-        // Note:  using Java's parallelStream to improve
-        //        performance. If I had more time, I would add
-        //        load tests that confirm this.
+        // NOTE: using Java's parallelStream to process FlowLog's in parallel.
+        // TODO: add more tests to confirm that parallelStream improves processing performance.
         logs.parallelStream().forEach(log -> {
             if (isValid(log)) {
                 try {
