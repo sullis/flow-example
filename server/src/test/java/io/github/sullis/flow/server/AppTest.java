@@ -1,14 +1,14 @@
 package io.github.sullis.flow.server;
 
-import net.javacrumbs.jsonunit.core.Option;
 import org.junit.jupiter.api.Test;
 
-import static io.github.sullis.flow.server.TestUtils.*;
+import static io.github.sullis.flow.server.TestUtils.makeFlowLog;
+import static io.github.sullis.flow.server.TestUtils.waitForSuccess;
+import static io.github.sullis.flow.server.TestUtils.GET_RESPONSE_TYPE;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import io.dropwizard.testing.ResourceHelpers;
 import io.dropwizard.testing.junit5.DropwizardAppExtension;
 import io.dropwizard.testing.junit5.DropwizardExtensionsSupport;
 import org.junitpioneer.jupiter.cartesian.CartesianTest;
@@ -23,8 +23,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
-
-import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 
 /**
 
