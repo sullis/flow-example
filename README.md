@@ -20,3 +20,11 @@ mvn clean test
 ```
 make run
 ```
+
+# curl command
+
+The server will be listening for requests on port 8080
+
+```
+curl 'http://localhost:8080/flows?hour=3'
+```
