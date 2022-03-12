@@ -8,7 +8,7 @@ info:
 paths:
   /flows:
     post:
-      operationId: addFlow
+      operationId: postFlows
       responses:
         '200':
           description: todo
@@ -21,7 +21,7 @@ paths:
       requestBody:
         $ref: '#/components/requestBodies/FlowLog'
     get:
-      operationId: getFlow
+      operationId: getFlows
       parameters:
         - name: hour
           in: query
