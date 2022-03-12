@@ -12,10 +12,6 @@ paths:
       responses:
         '200':
           description: todo
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/FlowLogArray'
         '405':
           description: Invalid input
       requestBody:
@@ -34,9 +30,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/FlowLog'
+                $ref: '#/components/schemas/FlowLogArray'
         '400':
           description: Invalid request
 components:
