@@ -15,11 +15,11 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FlowLog'
+                $ref: '#/components/schemas/FlowLogArray'
         '405':
           description: Invalid input
       requestBody:
-        $ref: '#/components/requestBodies/FlowLog'
+        $ref: '#/components/requestBodies/FlowLogArray'
     get:
       operationId: getFlows
       parameters:
@@ -41,16 +41,19 @@ paths:
           description: Invalid request
 components:
   requestBodies:
-    FlowLog:
+    FlowLogArray:
       content:
         application/json:
           schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/FlowLog'
+            $ref: '#/components/schemas/FlowLogArray'
       description: todo
       required: true
   schemas:
+    FlowLogArray:
+      title: flow log array
+      type: array
+      items:
+        $ref: '#/components/schemas/FlowLog'
     FlowLog:
       title: flow log
       type: object
