@@ -18,7 +18,7 @@
     <main.class>io.github.sullis.flow.server.App</main.class>
     <openapi-generator.version>5.4.0</openapi-generator.version>
     <jackson.version>2.13.2</jackson.version>
-    <jackson-databind.version>2.13.2.1</jackson-databind.version>
+    <jackson-databind.version>2.13.2.2</jackson-databind.version>
     <swagger.version>1.6.5</swagger.version>
     <junit.version>5.8.2</junit.version>
     <logback.version>1.2.11</logback.version>
@@ -71,7 +71,7 @@
     <dependency>
         <groupId>com.fasterxml.jackson.core</groupId>
         <artifactId>jackson-databind</artifactId>
-        <version>${jackson-dataabind.version}</version>
+        <version>${jackson-databind.version}</version>
     </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
