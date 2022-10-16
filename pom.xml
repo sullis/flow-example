@@ -17,7 +17,7 @@
   <properties>
     <main.class>io.github.sullis.flow.server.App</main.class>
     <openapi-generator.version>6.2.0</openapi-generator.version>
-    <jackson.version>2.13.3</jackson.version>
+    <jackson.version>2.13.4</jackson.version>
     <jackson-databind.version>2.13.3</jackson-databind.version>
     <swagger.version>1.6.6</swagger.version>
     <junit.version>5.9.1</junit.version>
