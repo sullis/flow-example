@@ -45,7 +45,7 @@ public class FlowAggregator {
                     processLog(log);
                     flowLogCount.increment();
                 } catch (Exception ex) {
-                    LOGGER.warn("FlowLog processing error: " + log, ex);
+                    LOGGER.warn("FlowLog processing error: {}", log, ex);
                     processLogExceptionCount.increment();
                 }
             } else {
@@ -68,7 +68,7 @@ public class FlowAggregator {
         if (isValidHour(hour)) {
             return this.flowDataArray[hour];
         } else {
-            LOGGER.warn("Invalid hour: " + hour);
+            LOGGER.warn("Invalid hour: {}", hour);
             return Collections.emptyMap();
         }
     }
