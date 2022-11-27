@@ -260,20 +260,20 @@
             <recipe>org.openrewrite.java.testing.junit5.JUnit5BestPractices</recipe>
             <recipe>org.openrewrite.java.logging.slf4j.Slf4jBestPractices</recipe>
           </activeRecipes>
-	  <failOnDryRunResults>true</failOnDryRunResults>
+	    <failOnDryRunResults>true</failOnDryRunResults>
         </configuration>
         <dependencies>
           <dependency>
             <groupId>org.openrewrite.recipe</groupId>
             <artifactId>rewrite-testing-frameworks</artifactId>
             <version>1.31.0</version>
-	  </dependency>
+	      </dependency>
           <dependency>
             <groupId>org.openrewrite.recipe</groupId>
             <artifactId>rewrite-logging-frameworks</artifactId>
             <version>1.15.0</version>
-	  </dependency>
-	</dependencies>
+	      </dependency>
+	    </dependencies>
       </plugin>
     </plugins>
   </build>
