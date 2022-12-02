@@ -19,7 +19,7 @@
     <openapi-generator.version>6.2.1</openapi-generator.version>
     <jackson.version>2.14.1</jackson.version>
     <jackson-databind.version>2.14.1</jackson-databind.version>
-    <swagger.version>1.6.8</swagger.version>
+    <swagger.version>1.6.9</swagger.version>
     <junit.version>5.9.1</junit.version>
     <logback.version>1.2.11</logback.version>
     <dropwizard.version>2.1.4</dropwizard.version>
