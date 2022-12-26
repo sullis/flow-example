@@ -254,11 +254,12 @@
       <plugin>
         <groupId>org.openrewrite.maven</groupId>
         <artifactId>rewrite-maven-plugin</artifactId>
-        <version>4.37.0</version>
+        <version>4.38.2</version>
         <configuration>
           <activeRecipes>
             <recipe>org.openrewrite.java.testing.junit5.JUnit5BestPractices</recipe>
             <recipe>org.openrewrite.java.logging.slf4j.Slf4jBestPractices</recipe>
+            <recipe>org.openrewrite.maven.RemoveDuplicateDependencies</recipe>
           </activeRecipes>
 	    <failOnDryRunResults>true</failOnDryRunResults>
         </configuration>
@@ -272,8 +273,13 @@
             <groupId>org.openrewrite.recipe</groupId>
             <artifactId>rewrite-logging-frameworks</artifactId>
             <version>1.15.0</version>
-	      </dependency>
-	    </dependencies>
+          </dependency>
+          <dependency>
+            <groupId>org.openrewrite</groupId>
+            <artifactId>rewrite-maven</artifactId>
+            <version>7.34.3</version>
+          </dependency>
+        </dependencies>
       </plugin>
     </plugins>
   </build>
