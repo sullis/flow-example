@@ -35,12 +35,12 @@ public class FlowAggregatorTest {
     private FlowAggregator aggregator;
 
     @BeforeEach
-    public void beforeEach() {
+    void beforeEach() {
         aggregator = new FlowAggregator(100);
     }
 
     @Test
-    public void testNoData() {
+    void testNoData() {
         Hours.stream().forEach(hour -> {
             assertThat(aggregator.findByHour(hour)).isEmpty();
         });
@@ -48,8 +48,8 @@ public class FlowAggregatorTest {
 
     @ParameterizedTest
     @NullSource
-    @ValueSource(ints = { -1, 25, 100 })
-    public void testInvalidHourIsIgnored(final Integer invalidHour) {
+    @ValueSource(ints = {-1, 25, 100})
+    void testInvalidHourIsIgnored(final Integer invalidHour) {
         final var vpcId = "vpc-0";
         assertThat(Hours.isValidHour(invalidHour)).isFalse();
         final var validLog = makeFlowLog(3, vpcId);
@@ -106,7 +106,7 @@ public class FlowAggregatorTest {
     }
 
     @Test
-    public void invokeRecordMethodMultipleTimes() {
+    void invokeRecordMethodMultipleTimes() {
         final AtomicLong logCount = new AtomicLong(0);
         hours().forEach(hour -> {
             VPC_LIST.forEach(vpc -> {

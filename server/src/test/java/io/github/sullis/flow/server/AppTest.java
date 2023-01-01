@@ -22,13 +22,13 @@ import java.util.List;
 
  */
 @ExtendWith(DropwizardExtensionsSupport.class)
-public class AppTest extends AbstractDropwizardTest {
+class AppTest extends AbstractDropwizardTest {
     private static final String CONTENT_TYPE = "application/json";
 
     private static final DropwizardAppExtension<AppConfig> APP = setupAppExtension();
 
     @Test
-    public void happyPath() {
+    void happyPath() {
         final int hour = 3;
         final var vpc0 = "vpc-0";
         final var vpc1 = "vpc-1";
@@ -56,11 +56,11 @@ public class AppTest extends AbstractDropwizardTest {
         expected1.setVpcId(vpc1);
 
         assertThat(response)
-            .containsExactlyInAnyOrder(expected0, expected1);
+                .containsExactlyInAnyOrder(expected0, expected1);
     }
 
     @Test
-    public void serverRejectsInvalidHour() {
+    void serverRejectsInvalidHour() {
         final var response = getClient()
                 .target(flowsUrl())
                 .queryParam("hour", -1)
@@ -71,7 +71,7 @@ public class AppTest extends AbstractDropwizardTest {
     }
 
     @Test
-    public void serverAcceptsAllValidHours() {
+    void serverAcceptsAllValidHours() {
         Hours.stream().forEach(hour -> {
             final var response = getClient()
                     .target(flowsUrl())
@@ -86,17 +86,17 @@ public class AppTest extends AbstractDropwizardTest {
     }
 
     @Test
-    public void serverReturns400WhenPostBodyIsInvalid() {
+    void serverReturns400WhenPostBodyIsInvalid() {
         postEntity(Entity.json("{garbage"), 400);
     }
 
     @Test
-    public void serverReturns400WhenPostBodyIsEmptyJson() {
+    void serverReturns400WhenPostBodyIsEmptyJson() {
         postEntity(Entity.json("{}"), 400);
     }
 
     @Test
-    public void serverRejectsUnsupportedMediaType() {
+    void serverRejectsUnsupportedMediaType() {
         postEntity(Entity.text(""), 415);
     }
 

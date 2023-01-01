@@ -28,12 +28,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 
  */
 @ExtendWith(DropwizardExtensionsSupport.class)
-public class ExampleTest extends AbstractDropwizardTest {
+class ExampleTest extends AbstractDropwizardTest {
 
     private static final DropwizardAppExtension<AppConfig> APP = setupAppExtension();
 
     @Test
-    public void example() {
+    void example() {
         final var requestPayload = loadResource("example/request_payload.json");
         final var response = getClient()
                 .target(flowsUrl())
