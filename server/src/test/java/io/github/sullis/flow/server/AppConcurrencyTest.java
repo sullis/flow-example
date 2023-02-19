@@ -84,9 +84,7 @@ public class AppConcurrencyTest extends AbstractDropwizardTest {
     private List<Callable<Boolean>> makeReaders(final int numReaders, final int hour) {
         List<Callable<Boolean>> result = new LinkedList<>();
         for (int i = 0; i < numReaders; i++) {
-            Callable<Boolean> reader = () -> {
-                return (getFlows(hour) != null);
-            };
+            Callable<Boolean> reader = () -> (getFlows(hour) != null);
             result.add(reader);
         }
         return result;

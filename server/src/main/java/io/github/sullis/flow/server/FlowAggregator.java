@@ -15,7 +15,7 @@ import static io.github.sullis.flow.server.Hours.isValidHour;
 import static io.github.sullis.flow.server.Utils.isValid;
 
 public class FlowAggregator {
-    private static final float DEFAULT_LOAD_FACTOR = 0.75f;
+    private static final float DEFAULT_LOAD_FACTOR = 0.75F;
     private static final Logger LOGGER = LoggerFactory.getLogger(FlowAggregator.class);
     private final ConcurrentHashMap<LookupKey, FlowTotal>[] flowDataArray;
     private final LongAdder flowLogCount = new LongAdder();
@@ -32,7 +32,7 @@ public class FlowAggregator {
     public FlowAggregator(final int concurrencyLevel) {
         this.flowDataArray = new ConcurrentHashMap[HOURS_PER_DAY];
         Hours.stream().forEach(hour -> {
-            flowDataArray[hour] = new ConcurrentHashMap<LookupKey, FlowTotal>(100, DEFAULT_LOAD_FACTOR, concurrencyLevel);
+            flowDataArray[hour] = new ConcurrentHashMap<>(100, DEFAULT_LOAD_FACTOR, concurrencyLevel);
         });
     }
 
@@ -59,7 +59,7 @@ public class FlowAggregator {
     private void processLog(final FlowLog log) {
         Map<LookupKey, FlowTotal> data = findByHour(log.getHour());
         final var key = buildLookupKey(log);
-        final FlowTotal total = data.computeIfAbsent(key, (k) -> new FlowTotal());
+        final FlowTotal total = data.computeIfAbsent(key, k -> new FlowTotal());
         total.bytesRx.add(log.getBytesRx());
         total.bytesTx.add(log.getBytesTx());
     }

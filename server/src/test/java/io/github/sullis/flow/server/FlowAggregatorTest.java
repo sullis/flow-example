@@ -75,7 +75,7 @@ public class FlowAggregatorTest {
         for (int n = 0; n < numReaders; n++) {
             Callable<Boolean> reader = () -> {
                 final var result = aggregator.findByHour(logs.get(0).getHour());
-                return (result != null);
+                return result != null;
             };
             callables.add(reader);
         }

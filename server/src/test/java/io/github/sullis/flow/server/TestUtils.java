@@ -15,11 +15,11 @@ import static org.awaitility.Awaitility.await;
 public class TestUtils {
     public static final GenericType<List<FlowLog>> GET_RESPONSE_TYPE = new GenericType<List<FlowLog>>() {};
 
-    public static final List<FlowLog> makeFlowLogs(final int hour, final List<String> vpcs) {
+    public static List<FlowLog> makeFlowLogs(final int hour, final List<String> vpcs) {
         return vpcs.stream().map(vpc -> makeFlowLog(hour, vpc)).toList();
     }
 
-    public static final FlowLog makeFlowLog(final Integer hour, final String vpcId) {
+    public static FlowLog makeFlowLog(final Integer hour, final String vpcId) {
         final var log = new FlowLog();
         log.setHour(hour);
         log.setBytesRx(1000);
@@ -33,7 +33,7 @@ public class TestUtils {
     public static void waitForSuccess(final List<Future<Boolean>> futures, final Duration atMost) {
         await().atMost(atMost)
                 .pollDelay(Duration.ofMillis(100))
-                .until(() -> futures.stream().allMatch(f -> isSuccess(f)));
+                .until(() -> futures.stream().allMatch(TestUtils::isSuccess));
     }
 
     private static boolean isSuccess(final Future<Boolean> future) {

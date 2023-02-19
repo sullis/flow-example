@@ -5,7 +5,7 @@ import org.openapitools.model.FlowLog;
 import static io.github.sullis.flow.server.Hours.isValidHour;
 
 public class Utils {
-    static public FlowLog buildFlowLog(final LookupKey key, final FlowTotal flowTotal) {
+    public static FlowLog buildFlowLog(final LookupKey key, final FlowTotal flowTotal) {
         final var log = new FlowLog();
         log.setSrcApp(key.srcApp());
         log.setDestApp(key.destApp());
@@ -32,10 +32,7 @@ public class Utils {
         if (log.getDestApp() == null) {
             return false;
         }
-        if (log.getVpcId() == null) {
-            return false;
-        }
-        return true;
+        return log.getVpcId() != null;
     }
 
 }

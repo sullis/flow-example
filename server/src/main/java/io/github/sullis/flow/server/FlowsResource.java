@@ -32,7 +32,7 @@ public class FlowsResource {
     public List<FlowLog> get(@QueryParam("hour") @Min(0) @Max(23) int hour) {
         Map<LookupKey, FlowTotal> data = aggregator.findByHour(hour);
         return data.entrySet().stream()
-                .map((entry) -> buildFlowLog(entry.getKey(), entry.getValue()))
+                .map(entry -> buildFlowLog(entry.getKey(), entry.getValue()))
                 .toList();
     }
 

@@ -41,7 +41,7 @@ class HoursTest {
         assertThat(Hours.isValidHour(hour)).isTrue();
     }
 
-    static private IntStream isValidHourReturnsTrue() {
+    private static IntStream isValidHourReturnsTrue() {
         return Hours.stream();
     }
 }
